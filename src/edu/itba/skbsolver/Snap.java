@@ -11,20 +11,32 @@ import java.awt.Point;
 public class Snap {
 	
 	private Point[] boxes;
+	private Point player;
+	private Scenario baseMap;
 	
 	/**
 	 * Create a Snap from:
-	 * a vector of points, a position for the player, and a Scene
 	 * 
-	 * @param pathToMap the path to a file with the map
+	 * @param boxes     a vector of positions where boxes are
+	 * @param player    the position of the player
+	 * @param baseMap   a Scenario where the boxes are 
 	 */
-	Snap(Point[] boxes, Point playerPosition, Scenario baseMap){
-		
+	Snap(Point[] boxes, Point player, Scenario baseMap){
+		this.boxes = boxes;
+		this.player = player;
+		this.baseMap = baseMap;
 	}
 
 	public Point[] getBoxes(){
-		return this.boxes;
+		return boxes;
 	}
-	
+
+	public Point getPlayer() {
+		return player;
+	}
+
+	public Scenario getBaseMap() {
+		return baseMap;
+	}
 	
 }
