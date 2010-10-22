@@ -111,6 +111,10 @@ public class Level {
 		return initial;
 	}
 	
+	public char get(int x, int y){
+		return map[x].charAt(y);
+	}
+	
 	/**
 	 * Is the game over if I'm in a given status?
 	 */

@@ -9,10 +9,11 @@ import java.awt.Point;
  * 
  * @author eordano
  */
-public class State {
+public class State implements Comparable<State>{
 
 	public static final int[] dx = {0,1,0,-1};
 	public static final int[] dy = {1,0,-1,0};
+	public static final int hashMagic = 5;
 	
 	public int[] boxes;
 	public int moves;
@@ -35,7 +36,7 @@ public class State {
 		this.moves = moves;
 		this.hashCalculated = player;
 		for (int i = 0; i < boxes.length; i++){
-			hashCalculated ^= (boxes[i] >>> i);
+			hashCalculated ^= (boxes[i] >>> hashMagic*i);
 		}
 	}
 	
@@ -56,29 +57,29 @@ public class State {
 		
 		this.boxes[boxMoved] += (dx[direction]<<16) + dy[direction];
 
-		// TODO: Reeview Zobrist key
+		// TODO: Review Zobrist key
 		this.hashCalculated = s.hashCalculated ^
 			s.player ^
-			(s.boxes[boxMoved] >>> boxMoved) ^
+			(s.boxes[boxMoved] >>> hashMagic*boxMoved) ^
 			this.player ^
-			(this.boxes[boxMoved] >>> boxMoved);
+			(this.boxes[boxMoved] >>> hashMagic*boxMoved);
 		
 		int newBox = boxMoved;
 		
 		while (newBox > 0 && this.boxes[newBox] < this.boxes[newBox-1]){
-			this.hashCalculated ^= (this.boxes[newBox] >>> newBox);
-			this.hashCalculated ^= (this.boxes[newBox-1] >>> newBox-1);
+			this.hashCalculated ^= (this.boxes[newBox] >>> hashMagic*newBox);
+			this.hashCalculated ^= (this.boxes[newBox-1] >>> hashMagic*(newBox-1));
 			swap(this.boxes, newBox, newBox - 1);
-			this.hashCalculated ^= (this.boxes[newBox] >>> newBox);
-			this.hashCalculated ^= (this.boxes[newBox-1] >>> newBox-1);
+			this.hashCalculated ^= (this.boxes[newBox] >>> hashMagic*(newBox));
+			this.hashCalculated ^= (this.boxes[newBox-1] >>> hashMagic*(newBox-1));
 			newBox--;
 		}
 		while (newBox != boxes.length-1 && this.boxes[newBox] > this.boxes[newBox+1]){
-			this.hashCalculated ^= (this.boxes[newBox] >>> newBox);
-			this.hashCalculated ^= (this.boxes[newBox+1] >>> newBox+1);
+			this.hashCalculated ^= (this.boxes[newBox] >>> hashMagic*newBox);
+			this.hashCalculated ^= (this.boxes[newBox+1] >>> hashMagic*(newBox+1));
 			swap(this.boxes, newBox, newBox + 1);
-			this.hashCalculated ^= (this.boxes[newBox] >>> newBox);
-			this.hashCalculated ^= (this.boxes[newBox+1] >>> newBox+1);
+			this.hashCalculated ^= (this.boxes[newBox] >>> hashMagic*newBox);
+			this.hashCalculated ^= (this.boxes[newBox+1] >>> hashMagic*(newBox+1));
 			newBox++;
 		}
 	}
@@ -140,5 +141,12 @@ public class State {
 		int c = v[a];
 		v[a] = b;
 		v[b] = c;
+	}
+	
+	public int compareTo(State b){
+		if (moves == b.moves){
+			return player - b.player;
+		}
+		return moves - b.moves;
 	}
 }
