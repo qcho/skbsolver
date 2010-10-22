@@ -49,32 +49,37 @@ public class StateSpawner{
 				rx = px+dx[d];
 				ry = py+dy[d];
 				
-				// TODO: esto es un placeholders
-				boolean validMove = true;
-				
 				if (distance[rx][ry] == -1 && // Si no visité este tile y:
 						
 					level.get(rx,ry)!='#' &&  // no hay una pared, entro, pero solo sí:
-					
-					(boxIndex[rx][ry] == -1 || // <- No hay una caja, el tile está vacío
-							
-							// o hay una caja ahí y es movible:
-					(level.get(rx+dx[d], ry+dy[d]) != '#' && boxIndex[rx+dx[d]][ry+dy[d]] == -1)
-					
-				)) {
+					(   
+						boxIndex[rx][ry] == -1 || // <- No hay una caja, el tile está vacío	
+						(
+								// o hay una caja ahí
+								level.get(rx+dx[d], ry+dy[d]) != '#'
+								
+								// y es movible:
+								&& boxIndex[rx+dx[d]][ry+dy[d]] == -1
+						
+								// and TODO: Check if no simple deadlocks are triggered
+						)
+					)
+				) {
 					r = (rx<<16)+ry;
 					
 					boxMoved = boxIndex[rx][ry];
 					
 					if (boxMoved != -1) {
-						// TODO: Check if no simple deadlocks
 						
 						State newState = new State(s, boxMoved, d, distance[rx][ry]);
 						if (!posTable.has(newState)){
-							// TODO: Check for further deadlocks
+							
+							// TODO: Check for further and heavier deadlocks
+							
 							newStates.add(newState);
 						}
 					}
+					
 					// Add the new position to the queue
 					distance[rx][ry] = distance[px][py] + 1;
 					queue.addLast(r);

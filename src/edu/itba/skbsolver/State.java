@@ -57,7 +57,7 @@ public class State implements Comparable<State>{
 		
 		this.boxes[boxMoved] += (dx[direction]<<16) + dy[direction];
 
-		// TODO: Review Zobrist key
+		// TODO: Review Zobrist key, this works but is not quite good
 		this.hashCalculated = s.hashCalculated ^
 			s.player ^
 			(s.boxes[boxMoved] >>> hashMagic*boxMoved) ^
