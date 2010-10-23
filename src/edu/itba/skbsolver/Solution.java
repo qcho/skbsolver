@@ -69,7 +69,7 @@ public class Solution {
 			}
 		}
 		
-		StringBuffer sol = new StringBuffer();
+		StringBuilder sol = new StringBuilder();
 		rx = next.player >> 16;
 		ry = next.player & 0xFFFF;
 
@@ -78,7 +78,8 @@ public class Solution {
 		
 		char[] how = {'r', 'd', 'l', 'u'};
 		
-		while (px != rx && py != ry){
+		while (px != rx || py != ry){
+			System.out.println("Estoy en " + rx + ", " + ry);
 			sol.append(how[lug[rx][ry]]);
 			int tx = dx[lug[rx][ry]];
 			ry -= dy[lug[rx][ry]];

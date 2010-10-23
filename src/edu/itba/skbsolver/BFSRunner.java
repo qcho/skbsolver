@@ -15,7 +15,7 @@ public class BFSRunner {
 		while (!queue.isEmpty()){
 			State s = queue.remove();
 			
-			// s.map.logger.info(s.toString());
+			s.map.logger.info(s.toString());
 			
 			List<State> newStates = stateSpawner.childs(s);
 			
