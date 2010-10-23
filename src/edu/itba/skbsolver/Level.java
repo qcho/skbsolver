@@ -21,7 +21,10 @@ public class Level {
 	
 	// A representation of the initial status
 	private State initial;
+
+	private List<Capacitor> capacitors;
 	
+	private List<Capacitor>[][] capacitorMap;
 	
 	// TODO: Calculate this when building level
 	public int xsize;
@@ -125,5 +128,13 @@ public class Level {
 			}
 		}
 		return true;
+	}
+
+	public List<Capacitor> getCapacitors() {
+		return this.capacitors;
+	}
+	
+	public List<Capacitor> getCapatitorsByPos(int x, int y){
+		return this.capacitorMap[x][y];
 	}
 }
