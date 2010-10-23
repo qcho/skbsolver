@@ -18,9 +18,9 @@
     <target name="dist">
         <mkdir dir="${dist}" />
         <jar destfile="${dist}/skbsolver.jar">
-            <fileset dir="${build}/**/*.class" />
+            <fileset dir="${build}" include="**/*.class" />
             <manifest>
-                <attribute name="Main-Class" value="Main.class" />
+                <attribute name="Main-Class" value="Main" />
             </manifest>
         </jar>
     </target>
