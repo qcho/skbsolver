@@ -81,10 +81,6 @@ public class StateSpawner{
 								// and is a "step-able" tile
 								&& !level.isBasicDeadlock(tx, ty)
 								
-								// TODO: y no dispara un freeze deadlock
-								// Warning: this may be heavy, but it's better
-								// to do this before cloning the array.
-								&& true
 						)
 					)
 				) {
@@ -97,6 +93,7 @@ public class StateSpawner{
 					if (boxMoved != -1) {
 						
 						// Si no dispara un Capacitor Deadlock
+						// This is kind of a easy check, let's do this before the freeze deadlock
 						for (Capacitor cap : level.getCapacitorsByPos(tx, ty)){
 							if(!cap.canIstepInto()){
 								noDeadlock = false;
@@ -104,16 +101,23 @@ public class StateSpawner{
 						}
 
 						if (noDeadlock){
-							State newState = new State(s, boxMoved, d, distance[rx][ry]);
-							if (!posTable.has(newState)){
+							if (// TODO: y no dispara un freeze deadlock
+								// Warning: this may be heavy, but it's better
+								// to do this before cloning the array.
+								true){
 
-								// TODO: Bipartite deadlock?
-								// I think bipartite deadlocks should be checked
-								// only if we just inserted a box into a target :D
+								State newState = new State(s, boxMoved, d, distance[rx][ry]);
+								if (!posTable.has(newState)){
+	
+									// TODO: Bipartite deadlock?
+									// I think bipartite deadlocks should be checked
+									// only if we just inserted a box into a target :D
+									
+									// TODO: Other deadlock???
+									
+									newStates.add(newState);
+								}
 								
-								// TODO: Other deadlocks???
-								
-								newStates.add(newState);
 							}
 						}
 					}
