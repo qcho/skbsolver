@@ -21,8 +21,13 @@ import org.slf4j.LoggerFactory;
  * 
  * @author eordano
  */
-public class Level {
+public class Level extends LevelParser {
 	
+	public Level(File level) {
+		super(level);
+		//Heuristic stuff.
+	}
+
 	final static Logger logger = LoggerFactory.getLogger(Level.class);
 
 	public static final int[] dx = { 0, 1, 0, -1 };
@@ -54,131 +59,110 @@ public class Level {
 	// TODO: a vector with distances to the nearest targets to use in heuristics
 	public int[][] heuristicDistance;
 
-	Level(File file) {
-		try {
-			BufferedReader in = new BufferedReader(new FileReader(file));
-			String str;
-			while ((str = in.readLine()) != null) {
-				processLine(str);
-			}
-			in.close();
-		} catch (IOException e) {
-			System.out.println("Error parsing level. " + e.getMessage());
-		}
-	}
-	
-	public void processLine(String line){
-		logger.info("line", line);
-		for(char c : line.toCharArray()){
-			System.out.print(c);
-		}
-		
-	}
-
-	/**
-	 * Create a Scenario from a filename. The initial position of things is
-	 * stored locally and can be accessed with getInitialSnap().
-	 * 
-	 * @param fileName
-	 */
-	Level(String fileName) {
-		List<Point> boxes = new LinkedList<Point>();
-		List<String> lines = new LinkedList<String>();
-		int player = 0;
-		xsize = 0;
-		ysize = 0;
-
-		// Load files
-		InputStream istream = null;
-		try {
-			istream = new FileInputStream(fileName);
-		} catch (Exception e) {
-			throw new RuntimeException("Could not open file");
-		}
-
-		int read = 0;
-		try {
-			StringBuffer line = new StringBuffer();
-			int x = 0;
-			int y = 0;
-			while ((read = istream.read()) != -1) {
-
-				if (read == '\n') {
-					// Reset positions
-					x++;
-					y = 0;
-
-					// Add line to list
-					lines.add(line.toString());
-
-					// Reset line
-					line = new StringBuffer();
-
-				} else if (read == '@') { // Player
-					player = ((x & 0xFFFF) << 16) | (y & 0xFFFF);
-					line.append(' ');
-				} else if (read == '+') { // Player on a target
-					player = ((x & 0xFFFF) << 16) | (y & 0xFFFF);
-					line.append('.');
-				} else if (read == '$') { // Box
-					boxes.add(new Point(x, y));
-					line.append(' ');
-				} else if (read == '*') { // Box on a target
-					boxes.add(new Point(x, y));
-					line.append('.');
-				} else if (read == '#') { // Wall
-					line.append('#');
-				} else if (read == ' ') { // Empty spaces
-					line.append(' ');
-				} else if (read == '.') { // Target
-					line.append('.');
-				} else { // This shouldn't happen
-					throw new RuntimeException("Unrecognized character " + read);
-				}
-
-				// Move to the left
-				y++;
-				ysize = ysize < y ? y : ysize; // Update board size
-			}
-			xsize = x; // Update board size
-			int[] finalBoxes = new int[boxes.size()];
-			int i = 0;
-			for (Point box : boxes) {
-				finalBoxes[i++] = (box.x << 16) | (box.y & 0xFFFF);
-			}
-			initial = new State(finalBoxes, player, this, 0);
-
-			map = new String[lines.size()];
-			i = 0;
-			for (String aLine : lines) {
-				map[i++] = aLine;
-			}
-		} catch (IOException e) {
-			throw new RuntimeException("Error reading file");
-		}
-
-		capacitors = new LinkedList<Capacitor>();
-
-		capacitorMap = new Object[xsize][ysize];
-
-		isDeadlock = new boolean[xsize][ysize];
-
-		for (int i = 0; i < xsize; i++) {
-			for (int j = 0; j < ysize; j++) {
-				isDeadlock[i][j] = true;
-				capacitorMap[i][j] = new LinkedList<Capacitor>();
-			}
-		}
-
-		createZobristKeys();
-
-		calculateDeadlocks();
-
-		calculateHallwayCapacitors();
-		calculateTwinsCapacitors();
-		calculateCornerCapacitors();
-		return;
-	}
+//	/**
+//	 * Create a Scenario from a filename. The initial position of things is
+//	 * stored locally and can be accessed with getInitialSnap().
+//	 * 
+//	 * @param fileName
+//	 */
+//	Level(String fileName) {
+//		List<Point> boxes = new LinkedList<Point>();
+//		List<String> lines = new LinkedList<String>();
+//		int player = 0;
+//		xsize = 0;
+//		ysize = 0;
+//
+//		// Load files
+//		InputStream istream = null;
+//		try {
+//			istream = new FileInputStream(fileName);
+//		} catch (Exception e) {
+//			throw new RuntimeException("Could not open file");
+//		}
+//
+//		int read = 0;
+//		try {
+//			StringBuffer line = new StringBuffer();
+//			int x = 0;
+//			int y = 0;
+//			while ((read = istream.read()) != -1) {
+//
+//				if (read == '\n') {
+//					// Reset positions
+//					x++;
+//					y = 0;
+//
+//					// Add line to list
+//					lines.add(line.toString());
+//
+//					// Reset line
+//					line = new StringBuffer();
+//
+//				} else if (read == '@') { // Player
+//					player = ((x & 0xFFFF) << 16) | (y & 0xFFFF);
+//					line.append(' ');
+//				} else if (read == '+') { // Player on a target
+//					player = ((x & 0xFFFF) << 16) | (y & 0xFFFF);
+//					line.append('.');
+//				} else if (read == '$') { // Box
+//					boxes.add(new Point(x, y));
+//					line.append(' ');
+//				} else if (read == '*') { // Box on a target
+//					boxes.add(new Point(x, y));
+//					line.append('.');
+//				} else if (read == '#') { // Wall
+//					line.append('#');
+//				} else if (read == ' ') { // Empty spaces
+//					line.append(' ');
+//				} else if (read == '.') { // Target
+//					line.append('.');
+//				} else { // This shouldn't happen
+//					throw new RuntimeException("Unrecognized character " + read);
+//				}
+//
+//				// Move to the left
+//				y++;
+//				ysize = ysize < y ? y : ysize; // Update board size
+//			}
+//			xsize = x; // Update board size
+//			int[] finalBoxes = new int[boxes.size()];
+//			int i = 0;
+//			for (Point box : boxes) {
+//				finalBoxes[i++] = (box.x << 16) | (box.y & 0xFFFF);
+//			}
+//			initial = new State(finalBoxes, player, this, 0);
+//
+//			map = new String[lines.size()];
+//			i = 0;
+//			for (String aLine : lines) {
+//				map[i++] = aLine;
+//			}
+//		} catch (IOException e) {
+//			throw new RuntimeException("Error reading file");
+//		}
+//
+//		capacitors = new LinkedList<Capacitor>();
+//
+//		capacitorMap = new Object[xsize][ysize];
+//
+//		isDeadlock = new boolean[xsize][ysize];
+//
+//		for (int i = 0; i < xsize; i++) {
+//			for (int j = 0; j < ysize; j++) {
+//				isDeadlock[i][j] = true;
+//				capacitorMap[i][j] = new LinkedList<Capacitor>();
+//			}
+//		}
+//
+//		createZobristKeys();
+//
+//		calculateDeadlocks();
+//
+//		calculateHallwayCapacitors();
+//		calculateTwinsCapacitors();
+//		calculateCornerCapacitors();
+//		return;
+//	}
 
 	public State getInitialState() {
 		return initial;
