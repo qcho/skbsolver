@@ -13,7 +13,6 @@ public class State implements Comparable<State>{
 
 	public static final int[] dx = {0,1,0,-1};
 	public static final int[] dy = {1,0,-1,0};
-	public static final int hashMagic = 5;
 	
 	public int[] boxes;
 	public int moves;
@@ -56,6 +55,7 @@ public class State implements Comparable<State>{
 		
 		this.boxes[boxMoved] += (dx[direction]<<16) + dy[direction];
 
+		// Update the Zobrist hash
 		this.hashCalculated = s.hashCalculated ^
 			map.playerZobrist[s.player>>16][s.player&0xFFFF] ^
 			map.boxZobrist[s.boxes[boxMoved]>>16][s.boxes[boxMoved]&0xFFFF]^
@@ -110,23 +110,19 @@ public class State implements Comparable<State>{
 	 */
 	public boolean equals(State other){
 		return this.hashCalculated == other.hashCalculated;
-		/*
-		if (this.player != other.player){
-			return false;
-		}
-		for(int i = 0; i < boxes.length; i++){
-			if (this.boxes[i] != other.boxes[i]){
-				return false;
-			}
-		}
-		return true;
-		*/
 	}
 	
+	/**
+	 * The hash is calculated in the constructor
+	 */
 	public int hashCode(){
 		return this.hashCalculated;
 	}
 	
+	/**
+	 * A comparison between states. This is required to push states into
+	 * a priority queue.
+	 */
 	public int compareTo(State b){
 		if (moves == b.moves){
 			return player - b.player;
