@@ -17,7 +17,12 @@
 
     <target name="dist">
         <mkdir dir="${dist}" />
-        <jar jarfile="${dist}/skbsolver.jar" basedir="${build}" />
+        <jar destfile="${dist}/skbsolver.jar">
+            <fileset dir="${build}/**/*.class" />
+            <manifest>
+                <attribute name="Main-Class" value="Main.class" />
+            </manifest>
+        </jar>
     </target>
 
     <target name="test" depends="dist">
