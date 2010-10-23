@@ -1,5 +1,6 @@
 package edu.itba.skbsolver;
 
+import java.util.List;
 import java.util.PriorityQueue;
 
 public class BFSRunner {
@@ -13,7 +14,11 @@ public class BFSRunner {
 		
 		while (!queue.isEmpty()){
 			State s = queue.remove();
-			for(State n : stateSpawner.childs(s)){
+			List<State> newStates = stateSpawner.childs(s);
+			
+			// TODO: reorder states with a Heuristic
+			
+			for(State n : newStates){
 				if (level.playerWin(n)){
 					winner = n;
 					queue.clear();

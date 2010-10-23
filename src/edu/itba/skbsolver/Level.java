@@ -284,10 +284,13 @@ public class Level {
 					rx = p.x + dx[d];
 					ry = p.y + dy[d];
 
-					if (heuristicDistance[rx][ry] == -1
+					if (heuristicDistance[rx][ry] == -1 // If I never visited that spot
+						// And it doesn't have a wall
 						&& get(rx, ry) != '#' 
+						// And there is no wall behind that spot
 						&& get(rx + dx[d], ry + dy[d]) != '#')
 					{
+						// It's a safe point
 						queue.addLast(new Point(rx, ry));
 						heuristicDistance[rx][ry] = heuristicDistance[p.x][p.y] + 1;
 						isDeadlock[rx][ry] = false;
