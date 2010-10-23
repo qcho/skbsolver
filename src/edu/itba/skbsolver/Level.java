@@ -4,8 +4,10 @@ import java.awt.Point;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 
 
@@ -16,6 +18,9 @@ import java.util.Random;
  * @author eordano
  */
 public class Level {
+
+	public static final int[] dx = {0,1,0,-1};
+	public static final int[] dy = {1,0,-1,0};
 	
 	// Stores the map
 	private String[] map;
@@ -39,6 +44,9 @@ public class Level {
 
 	public int[][] playerZobrist;
 	public int[][] boxZobrist;
+	
+	// TODO: a vector with distances to the nearest targets to use in heuristics
+	public int[][] heuristicDistance;
 	
 	/**
 	 * Create a Scenario from a filename. The initial position of things
@@ -211,8 +219,8 @@ public class Level {
 	 * gets XORed with the Zobrist key of that tile. A piece in Sokoban can be
 	 * either a player or a box, so we create two different zobrist keys.
 	 * 
-	 * This program asumes that if two Zobrist keys are the same, in a 16 bit key
-	 * hash table, the states are the same (you have to be very unlucky to hit the
+	 * This program asumes that if two Zobrist keys are the same, 
+	 * the states are the same (you have to be very unlucky to hit the
 	 * same hash with two different States)
 	 */
 	private void createZobristKeys() {
@@ -243,8 +251,50 @@ public class Level {
 	 * by a box. 
 	 */
 	private void calculateDeadlocks() {
-		// TODO Auto-generated method stub
+		List<Point> targets = new LinkedList<Point>();
+		Deque<Point> queue;
+		heuristicDistance = new int[xsize][ysize];
+
+		int rx, ry;
 		
+		for(int i = 0; i < xsize; i++){
+			for(int j = 0; j < ysize; j++){
+				heuristicDistance[i][j] = -1;
+				if (get(i, j) == '.'){
+					heuristicDistance[i][j] = 0;
+					isDeadlock[i][j] = false;
+					targets.add(new Point(i, j));
+				}
+			}
+		}
+		 
+		for(Point p : targets){
+			queue = new LinkedList<Point>();
+			
+			queue.addLast(p);
+			
+			// While queue is not empty:
+			while(!queue.isEmpty()){
+				
+				// Get the last element 
+				p = queue.removeFirst();
+				
+				// For each direction
+				for(int d = 0; d < 4; d++){
+					rx = p.x + dx[d];
+					ry = p.y + dy[d];
+
+					if (heuristicDistance[rx][ry] == -1
+						&& get(rx, ry) != '#' 
+						&& get(rx + dx[d], ry + dy[d]) != '#')
+					{
+						queue.addLast(new Point(rx, ry));
+						heuristicDistance[rx][ry] = heuristicDistance[p.x][p.y] + 1;
+						isDeadlock[rx][ry] = false;
+					}
+				}
+			}
+		}
 	}
 
 	
