@@ -1,8 +1,8 @@
-<project name="skbsolver" default="build">
+<project name="skbsolver" default="dist">
 
     <property name="src" location="src/" />
-    <property name="build" location="build/" />
-    <property name="dist" location="final/" />
+    <property name="build" location="bin/" />
+    <property name="dist" location="dist/" />
 
     <target name="clean">
         <delete dir="${build}" />
@@ -11,16 +11,16 @@
 
     <target name="compile">
         <mkdir dir="${build}" />
-        <javac srcdir="${src}" destdir="${build}" />
+        <javac includeAntRuntime="false" srcdir="${src}" destdir="${build}" />
         <!-- TODO: compilar el código Cpp -->
     </target>
 
-    <target name="dist">
+    <target name="dist" depends="compile">
         <mkdir dir="${dist}" />
         <jar destfile="${dist}/skbsolver.jar">
-            <fileset dir="${build}" include="**/*.class" />
+            <fileset dir="${build}" />
             <manifest>
-                <attribute name="Main-Class" value="Main" />
+                <attribute name="Main-Class" value="edu.itba.skbsolver.Main" />
             </manifest>
         </jar>
     </target>
