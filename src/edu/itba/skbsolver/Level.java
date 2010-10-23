@@ -23,10 +23,14 @@ public class Level {
 	// A representation of the initial status
 	private State initial;
 
+	// The entire list of capacitors in a map.
 	private List<Capacitor> capacitors;
 	
+	// This should be List<Capacitor>[][] but Java doesn't allow it
 	private Object[][] capacitorMap;
 	
+	// This map returns what tiles are "step-able" by boxes without triggering
+	// a simple deadlock. Example: a box trapped in a corner
 	private boolean[][] isDeadlock;
 	
 	// TODO: Calculate this when building level
@@ -49,6 +53,7 @@ public class Level {
 		xsize = 0;
 		ysize = 0;
 		
+		// Load files
 		InputStream istream = null;
 		try {
 			istream = new FileInputStream(fileName);
@@ -74,33 +79,33 @@ public class Level {
 					// Reset line
 					line = new StringBuffer();
 					
-				} else if (read == '@'){
+				} else if (read == '@'){ // Player
 					player = ((x&0xFFFF) << 16) | (y & 0xFFFF);
 					line.append(' ');
-				} else if (read == '+'){
+				} else if (read == '+'){ // Player on a target
 					player = ((x&0xFFFF) << 16) | (y & 0xFFFF);
 					line.append('.');
-				} else if (read == '$'){
+				} else if (read == '$'){ // Box
 					boxes.add(new Point(x, y));
 					line.append(' ');
-				} else if (read == '*'){
+				} else if (read == '*'){ // Box on a target
 					boxes.add(new Point(x, y));
 					line.append('.');
-				} else if (read == '#'){
+				} else if (read == '#'){ // Wall
 					line.append('#');
-				} else if (read == ' '){
+				} else if (read == ' '){ // Empty spaces
 					line.append(' ');
-				} else if (read == '.'){
+				} else if (read == '.'){ // Target
 					line.append('.');
-				} else {
+				} else {                 // This shouldn't happen
 					throw new RuntimeException("Unrecognized character");
 				}
 				
 				// Move to the left
 				y++;
-				ysize = ysize < y ? y : ysize;
+				ysize = ysize < y ? y : ysize; // Update board size
 			}
-			xsize = x;
+			xsize = x; // Update board size
 			int[] finalBoxes = new int[boxes.size()];
 			int i = 0;
 			for (Point box : boxes){
@@ -164,6 +169,17 @@ public class Level {
 		return this.capacitors;
 	}
 	
+	/**
+	 * Return the list of capacitors generated for a random position.
+	 * 
+	 * This method retrieves a list of capacitors involved with this tile,
+	 * so another method can check if he can "step into" this tile.
+	 * 
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
 	public List<Capacitor> getCapacitorsByPos(int x, int y){
 		return (List<Capacitor>) this.capacitorMap[x][y];
 	}
