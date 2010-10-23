@@ -1,6 +1,8 @@
 package edu.itba.skbsolver;
 
 import java.awt.Point;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -148,20 +150,27 @@ public class State implements Comparable<State>{
 	}
 	
 	public String toString(){
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		
-		s.append("Player position: ");
-		s.append(player>>16);
-		s.append(',');
-		s.append(player & 0xFFFF);
-		s.append('\n');
+		Map<Point, Character> m = new HashMap<Point, Character>();
+		
+		Point pl = new Point(player >> 16, player & 0xFFFF);
+		m.put(pl, map.get(pl.x, pl.y));
+		map.map[pl.x][pl.y] = '$';
 		
 		for (int box: boxes){
-			s.append("Box in position: ");
-			s.append(box>>16);
-			s.append(',');
-			s.append(box & 0xFFFF);
+			pl = new Point(box >> 16, box & 0xFFFF);
+			m.put(pl, map.get(pl.x, pl.y));
+			map.map[pl.x][pl.y] = '$';
+		}
+		
+		for (char[] linea : map.map){
+			s.append(linea);
 			s.append('\n');
+		}
+		
+		for (Point p : m.keySet()){
+			map.map[p.x][p.y] = m.get(p);
 		}
 		
 		return s.toString();
