@@ -13,10 +13,13 @@ public enum Token {
 	TARGET('.'),
 	FREE(' ');
 	
-	static Map<Token, Character> map = new EnumMap<Token, Character>(Token.class);
+	Map<Token, Character> map = new EnumMap<Token, Character>(Token.class);
+	
+	final public char c;
 	
 	Token(char c){
-		map.put(c, this);
+		this.c = c;
+		map.put(this, c);
 	}
 	
 }
