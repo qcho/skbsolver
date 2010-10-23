@@ -1,22 +1,22 @@
 package edu.itba.skbsolver;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class PositionsTable {
 	
-	private Set<State> map;
+	private boolean[] map;
 	
 	public PositionsTable(){
-		map = new HashSet<State>(1<<20); // Create a hashset with 20 bits keys
+		map = new boolean[1<<20]; // Create a hashset with 20 bits keys
+		for(int i = 0; i < 1<<20; i++){
+			map[i] = false;
+		}
 	}
 
-	public boolean has(State newState) {
-		return map.contains(newState);
+	public boolean has(int hash) {
+		return map[hash & ((1<<20) - 1)];
 	}
 	
-	public void add(State newState){
-		map.add(newState);
+	public void add(int hash){
+		map[hash & ((1<<20) - 1)] = true;
 	}
 	
 }

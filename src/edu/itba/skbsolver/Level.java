@@ -18,7 +18,6 @@ import java.util.Random;
  * @author eordano
  */
 public class Level {
-
 	public static final int[] dx = {0,1,0,-1};
 	public static final int[] dy = {1,0,-1,0};
 	
