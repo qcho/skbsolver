@@ -173,7 +173,18 @@ public class Level {
 	}
 	
 	/**
-	 * Create zobrist random strings.
+	 * Create Zobrist hash random strings.
+	 * 
+	 * This works the following way:
+	 * 
+	 * For the entire game, each tile is asigned a random string generated at
+	 * the beggining of the game. When a piece gets into that tile, the State key
+	 * gets XORed with the Zobrist key of that tile. A piece in Sokoban can be
+	 * either a player or a box, so we create two different zobrist keys.
+	 * 
+	 * This program asumes that if two Zobrist keys are the same, in a 16 bit key
+	 * hash table, the states are the same (you have to be very unlucky to hit the
+	 * same hash with two different States)
 	 */
 	private void createZobristKeys() {
 		Random randGen = new Random(xsize + ysize);
