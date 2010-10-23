@@ -32,12 +32,12 @@ public class StateSpawner{
 				boxIndex[i][j] = distance[i][j] = -1;
 			}
 		}
-		for (Capacitor cap : level.capacitors()){
+		for (Capacitor cap : level.getCapacitors()){
 			cap.reset();
 		}
 		for (int i = 0; i < s.boxes.length; i++){
 			boxIndex[s.boxes[i] >> 16][s.boxes[i] & 0xFFFF] = i;
-			for (Capacitor cap : level.capacitorsPerBox(s.boxes[i]>>16, s.boxes[i] & 0xFFFF)){
+			for (Capacitor cap : level.getCapacitorsByPos(s.boxes[i]>>16, s.boxes[i] & 0xFFFF)){
 				cap.countPlus();
 			}
 		}

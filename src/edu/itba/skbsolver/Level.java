@@ -134,7 +134,7 @@ public class Level {
 		return this.capacitors;
 	}
 	
-	public List<Capacitor> getCapatitorsByPos(int x, int y){
+	public List<Capacitor> getCapacitorsByPos(int x, int y){
 		return this.capacitorMap[x][y];
 	}
 }
