@@ -75,7 +75,7 @@ public class StateSpawner{
 								// O hay una caja ahí
 								level.get(tx, ty) != '#'
 								
-								// y es movible:
+								// y es movible (no se choca con nada después):
 								&& boxIndex[tx][ty] == -1
 						
 								// and is a "step-able" tile
@@ -109,10 +109,7 @@ public class StateSpawner{
 						}
 
 						if (noDeadlock){
-							if (// TODO: y no dispara un freeze deadlock
-								// Warning: this may be heavy, but it's better
-								// to do this before cloning the array.
-								true){
+							if (s.triggersFreezeDeadlock(boxMoved, d)){
 
 								posTable.add(newHash);
 								

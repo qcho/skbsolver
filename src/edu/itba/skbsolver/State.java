@@ -175,4 +175,8 @@ public class State implements Comparable<State>{
 		
 		return s.toString();
 	}
+
+	public boolean triggersFreezeDeadlock(int boxMoved, int d) {
+		return false;
+	}
 }

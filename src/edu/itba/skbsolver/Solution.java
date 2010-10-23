@@ -76,10 +76,9 @@ public class Solution {
 		px = current.player >> 16;
 		py = current.player & 0xFFFF;
 		
-		char[] how = {'r', 'd', 'l', 'u'};
+		char[] how = {'l', 'u', 'r', 'd'};
 		
 		while (px != rx || py != ry){
-			System.out.println("Estoy en " + rx + ", " + ry);
 			sol.append(how[lug[rx][ry]]);
 			int tx = dx[lug[rx][ry]];
 			ry -= dy[lug[rx][ry]];
