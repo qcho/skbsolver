@@ -125,6 +125,14 @@ public class State implements Comparable<State>{
 		return moves - b.moves;
 	}
 
+	/**
+	 * Calculate a new hash if the player would move
+	 * 
+	 * @param d the direction (0..3)
+	 * @param box the index of the box that will be moved
+	 * 
+	 * @return a new hash
+	 */
 	public int hashIfMove(int d, int box) {
 		int ret = hashCalculated ^
 			map.playerZobrist[player>>16][player&0xFFFF] ^
