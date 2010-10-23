@@ -6,7 +6,11 @@ import java.security.InvalidParameterException;
 import com.sun.org.apache.xpath.internal.functions.WrongNumberArgsException;
 
 public class Main {
-	private static final String USAGE_HELP = "Usage: lefel-file method [tree] \n\n" + "  level-file   The file of the level.\n" + "      method   Either \"BFS\" or \"DFS.\n" + "        tree   Wheter to output .dot file or not.";
+	private static final String USAGE_HELP = 
+			"Usage: level-file method [tree] \n\n" + 
+			"    level-file   The file of the level.\n" +
+			"    method   Either \"BFS\" or \"DFS.\n" +
+			"    tree   Wheter to output .dot file or not.";
 
 	public static void main(String args[]) {
 
@@ -36,7 +40,11 @@ public class Main {
 				throw new InvalidParameterException("Only BFS & DFS methods are provided.");
 			}
 
-			System.out.println("Best Solution: " + sol);
+			System.out.println("Best Solution: " + sol.movements);
+			
+			for (String s : sol.transitions){
+				System.out.println("    " + s);
+			}
 
 		} catch (Exception e) {
 			System.out.println("Error: " + e.getMessage());
