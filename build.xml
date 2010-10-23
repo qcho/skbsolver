@@ -1,0 +1,29 @@
+<project name="skbsolver" default="build">
+
+    <property name="src" location="src/" />
+    <property name="build" location="build/" />
+    <property name="dist" location="final/" />
+
+    <target name="clean">
+        <delete dir="${build}" />
+        <delete dir="${dist}" />
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${build}" />
+        <javac srcdir="${src}" destdir="${build}" />
+        <!-- TODO: compilar el código Cpp -->
+    </target>
+
+    <target name="dist">
+        <mkdir dir="${dist}" />
+        <jar jarfile="${dist}/skbsolver.jar" basedir="${build}" />
+    </target>
+
+    <target name="test" depends="dist">
+        <!-- TODO: llamadas al jar con cada nivel -->
+        <!-- TODO: checkear la solución con el C++ -->
+    </target>
+
+</project>
+
