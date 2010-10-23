@@ -48,7 +48,6 @@ public class State implements Comparable<State>{
 	 * @param d
 	 */
 	public State(State s, int boxMoved, int direction, int playerMoves) {
-		// TODO Auto-generated constructor stub
 		this.parent = s;
 		this.boxes = s.boxes.clone();
 		this.moves = s.moves + playerMoves;
