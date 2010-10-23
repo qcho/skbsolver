@@ -1,12 +1,7 @@
 package edu.itba.skbsolver;
 
 import java.awt.Point;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,21 +18,10 @@ import org.slf4j.LoggerFactory;
  */
 public class Level extends LevelParser {
 	
-	public Level(File level) {
-		super(level);
-		//Heuristic stuff.
-	}
-
 	final static Logger logger = LoggerFactory.getLogger(Level.class);
 
 	public static final int[] dx = { 0, 1, 0, -1 };
 	public static final int[] dy = { 1, 0, -1, 0 };
-
-	// Stores the map
-	private String[] map;
-
-	// A representation of the initial status
-	private State initial;
 
 	// The entire list of capacitors in a map.
 	private List<Capacitor> capacitors;
@@ -48,121 +32,53 @@ public class Level extends LevelParser {
 	// This map returns what tiles are "step-able" by boxes without triggering
 	// a simple deadlock. Example: a box trapped in a corner
 	private boolean[][] isDeadlock;
-
-	// TODO: Calculate this when building level
-	public int xsize;
-	public int ysize;
-
-	public int[][] playerZobrist;
-	public int[][] boxZobrist;
-
+	
 	// TODO: a vector with distances to the nearest targets to use in heuristics
 	public int[][] heuristicDistance;
 
-//	/**
-//	 * Create a Scenario from a filename. The initial position of things is
-//	 * stored locally and can be accessed with getInitialSnap().
-//	 * 
-//	 * @param fileName
-//	 */
-//	Level(String fileName) {
-//		List<Point> boxes = new LinkedList<Point>();
-//		List<String> lines = new LinkedList<String>();
-//		int player = 0;
-//		xsize = 0;
-//		ysize = 0;
-//
-//		// Load files
-//		InputStream istream = null;
-//		try {
-//			istream = new FileInputStream(fileName);
-//		} catch (Exception e) {
-//			throw new RuntimeException("Could not open file");
-//		}
-//
-//		int read = 0;
-//		try {
-//			StringBuffer line = new StringBuffer();
-//			int x = 0;
-//			int y = 0;
-//			while ((read = istream.read()) != -1) {
-//
-//				if (read == '\n') {
-//					// Reset positions
-//					x++;
-//					y = 0;
-//
-//					// Add line to list
-//					lines.add(line.toString());
-//
-//					// Reset line
-//					line = new StringBuffer();
-//
-//				} else if (read == '@') { // Player
-//					player = ((x & 0xFFFF) << 16) | (y & 0xFFFF);
-//					line.append(' ');
-//				} else if (read == '+') { // Player on a target
-//					player = ((x & 0xFFFF) << 16) | (y & 0xFFFF);
-//					line.append('.');
-//				} else if (read == '$') { // Box
-//					boxes.add(new Point(x, y));
-//					line.append(' ');
-//				} else if (read == '*') { // Box on a target
-//					boxes.add(new Point(x, y));
-//					line.append('.');
-//				} else if (read == '#') { // Wall
-//					line.append('#');
-//				} else if (read == ' ') { // Empty spaces
-//					line.append(' ');
-//				} else if (read == '.') { // Target
-//					line.append('.');
-//				} else { // This shouldn't happen
-//					throw new RuntimeException("Unrecognized character " + read);
-//				}
-//
-//				// Move to the left
-//				y++;
-//				ysize = ysize < y ? y : ysize; // Update board size
-//			}
-//			xsize = x; // Update board size
-//			int[] finalBoxes = new int[boxes.size()];
-//			int i = 0;
-//			for (Point box : boxes) {
-//				finalBoxes[i++] = (box.x << 16) | (box.y & 0xFFFF);
-//			}
-//			initial = new State(finalBoxes, player, this, 0);
-//
-//			map = new String[lines.size()];
-//			i = 0;
-//			for (String aLine : lines) {
-//				map[i++] = aLine;
-//			}
-//		} catch (IOException e) {
-//			throw new RuntimeException("Error reading file");
-//		}
-//
-//		capacitors = new LinkedList<Capacitor>();
-//
-//		capacitorMap = new Object[xsize][ysize];
-//
-//		isDeadlock = new boolean[xsize][ysize];
-//
-//		for (int i = 0; i < xsize; i++) {
-//			for (int j = 0; j < ysize; j++) {
-//				isDeadlock[i][j] = true;
-//				capacitorMap[i][j] = new LinkedList<Capacitor>();
-//			}
-//		}
-//
-//		createZobristKeys();
-//
-//		calculateDeadlocks();
-//
-//		calculateHallwayCapacitors();
-//		calculateTwinsCapacitors();
-//		calculateCornerCapacitors();
-//		return;
-//	}
+	// A representation of the initial status
+	public State initial;
+	
+	/**
+	 * Create a Scenario from a filename. The initial position of things is
+	 * stored locally and can be accessed with getInitialSnap().
+	 * 
+	 * @param fileName
+	 */
+	Level(File file) {
+		super(file);
+
+		int[] initialBoxes = new int[boxesBuffer.size()];
+		int j = 0;
+		for (Integer box: boxesBuffer){
+			initialBoxes[j++] = box;
+		}
+		
+		// Zobrist Keys must be created before creating the initial State
+		createZobristKeys();
+		
+		initial = new State(initialBoxes, playerBuffer.get(0), this, 0);
+		
+		capacitors = new LinkedList<Capacitor>();
+
+		capacitorMap = new Object[xsize][ysize];
+
+		isDeadlock = new boolean[xsize][ysize];
+
+		for (int i = 0; i < xsize; i++) {
+			for (j = 0; j < ysize; j++) {
+				isDeadlock[i][j] = true;
+				capacitorMap[i][j] = new LinkedList<Capacitor>();
+			}
+		}
+
+		calculateDeadlocks();
+
+		calculateHallwayCapacitors();
+		calculateTwinsCapacitors();
+		calculateCornerCapacitors();
+		return;
+	}
 
 	public State getInitialState() {
 		return initial;
@@ -176,7 +92,7 @@ public class Level extends LevelParser {
 	 * @return
 	 */
 	public char get(int x, int y) {
-		return map[x].charAt(y);
+		return map[x][y];
 	}
 
 	/**
@@ -184,7 +100,7 @@ public class Level extends LevelParser {
 	 */
 	public boolean playerWin(State snap) {
 		for (int box : snap.boxes) {
-			if (map[box >> 16].charAt(box & 0xFFFF) != '.') {
+			if (map[box >> 16][box & 0xFFFF] != '.') {
 				return false;
 			}
 		}
@@ -217,32 +133,6 @@ public class Level extends LevelParser {
 
 	public boolean isBasicDeadlock(int x, int y) {
 		return this.isDeadlock[x][y];
-	}
-
-	/**
-	 * Create Zobrist hash random strings.
-	 * 
-	 * This works the following way:
-	 * 
-	 * For the entire game, each tile is asigned a random string generated at
-	 * the beggining of the game. When a piece gets into that tile, the State
-	 * key gets XORed with the Zobrist key of that tile. A piece in Sokoban can
-	 * be either a player or a box, so we create two different zobrist keys.
-	 * 
-	 * This program asumes that if two Zobrist keys are the same, the states are
-	 * the same (you have to be very unlucky to hit the same hash with two
-	 * different States)
-	 */
-	private void createZobristKeys() {
-		Random randGen = new Random(xsize + ysize);
-		playerZobrist = new int[xsize][ysize];
-		boxZobrist = new int[xsize][ysize];
-		for (int i = 0; i < xsize; i++) {
-			for (int j = 0; j < ysize; j++) {
-				playerZobrist[i][j] = randGen.nextInt();
-				boxZobrist[i][j] = randGen.nextInt();
-			}
-		}
 	}
 
 	/**
@@ -305,6 +195,34 @@ public class Level extends LevelParser {
 						isDeadlock[rx][ry] = false;
 					}
 				}
+			}
+		}
+	}
+	
+
+
+	/**
+	 * Create Zobrist hash random strings.
+	 * 
+	 * This works the following way:
+	 * 
+	 * For the entire game, each tile is asigned a random string generated at
+	 * the beggining of the game. When a piece gets into that tile, the State
+	 * key gets XORed with the Zobrist key of that tile. A piece in Sokoban can
+	 * be either a player or a box, so we create two different zobrist keys.
+	 * 
+	 * This program asumes that if two Zobrist keys are the same, the states are
+	 * the same (you have to be very unlucky to hit the same hash with two
+	 * different States)
+	 */
+	private void createZobristKeys() {
+		Random randGen = new Random(xsize + ysize);
+		playerZobrist = new int[xsize][ysize];
+		boxZobrist = new int[xsize][ysize];
+		for (int i = 0; i < xsize; i++) {
+			for (int j = 0; j < ysize; j++) {
+				playerZobrist[i][j] = randGen.nextInt();
+				boxZobrist[i][j] = randGen.nextInt();
 			}
 		}
 	}
