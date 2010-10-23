@@ -17,6 +17,7 @@ public class StateSpawner{
 	
 	public StateSpawner(PositionsTable posTable, Level level){
 		this.posTable = posTable;
+		this.level = level;
 	}
 
 	public List<State> childs(State s) {

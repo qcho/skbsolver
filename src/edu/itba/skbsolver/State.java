@@ -34,9 +34,9 @@ public class State implements Comparable<State>{
 		this.player = player;
 		this.map = map;
 		this.moves = moves;
-		this.hashCalculated = player;
+		this.hashCalculated = map.playerZobrist[player>>16][player&0xFFFF];
 		for (int i = 0; i < boxes.length; i++){
-			hashCalculated ^= (boxes[i] >>> hashMagic*i);
+			hashCalculated ^= map.boxZobrist[boxes[i]>>16][boxes[i]&0xFFFF];
 		}
 	}
 	
@@ -56,31 +56,11 @@ public class State implements Comparable<State>{
 		
 		this.boxes[boxMoved] += (dx[direction]<<16) + dy[direction];
 
-		// TODO: Review Zobrist key, this works but is not quite good
 		this.hashCalculated = s.hashCalculated ^
-			s.player ^
-			(s.boxes[boxMoved] >>> hashMagic*boxMoved) ^
-			this.player ^
-			(this.boxes[boxMoved] >>> hashMagic*boxMoved);
-		
-		int newBox = boxMoved;
-		
-		while (newBox > 0 && this.boxes[newBox] < this.boxes[newBox-1]){
-			this.hashCalculated ^= (this.boxes[newBox] >>> hashMagic*newBox);
-			this.hashCalculated ^= (this.boxes[newBox-1] >>> hashMagic*(newBox-1));
-			swap(this.boxes, newBox, newBox - 1);
-			this.hashCalculated ^= (this.boxes[newBox] >>> hashMagic*(newBox));
-			this.hashCalculated ^= (this.boxes[newBox-1] >>> hashMagic*(newBox-1));
-			newBox--;
-		}
-		while (newBox != boxes.length-1 && this.boxes[newBox] > this.boxes[newBox+1]){
-			this.hashCalculated ^= (this.boxes[newBox] >>> hashMagic*newBox);
-			this.hashCalculated ^= (this.boxes[newBox+1] >>> hashMagic*(newBox+1));
-			swap(this.boxes, newBox, newBox + 1);
-			this.hashCalculated ^= (this.boxes[newBox] >>> hashMagic*newBox);
-			this.hashCalculated ^= (this.boxes[newBox+1] >>> hashMagic*(newBox+1));
-			newBox++;
-		}
+			map.playerZobrist[s.player>>16][s.player&0xFFFF] ^
+			map.boxZobrist[s.boxes[boxMoved]>>16][s.boxes[boxMoved]&0xFFFF]^
+  			map.playerZobrist[this.player>>16][this.player&0xFFFF] ^
+			map.boxZobrist[this.boxes[boxMoved]>>16][this.boxes[boxMoved]&0xFFFF];
 	}
 
 	/**
@@ -134,12 +114,6 @@ public class State implements Comparable<State>{
 	
 	public int hashCode(){
 		return this.hashCalculated;
-	}
-	
-	private void swap(int[] v, int a, int b){
-		int c = v[a];
-		v[a] = b;
-		v[b] = c;
 	}
 	
 	public int compareTo(State b){

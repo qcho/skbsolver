@@ -31,6 +31,9 @@ public class Level {
 	// TODO: Calculate this when building level
 	public int xsize;
 	public int ysize;
+
+	public int[][] playerZobrist;
+	public int[][] boxZobrist;
 	
 	/**
 	 * Create a Scenario from a filename. The initial position of things
@@ -42,6 +45,8 @@ public class Level {
 		List<Point> boxes = new LinkedList<Point>();
 		List<String> lines = new LinkedList<String>();
 		int player = 0;
+		xsize = 0;
+		ysize = 0;
 		
 		InputStream istream = null;
 		try {
@@ -92,8 +97,9 @@ public class Level {
 				
 				// Move to the left
 				y++;
+				ysize = ysize < y ? y : ysize;
 			}
-			
+			xsize = x;
 			int[] finalBoxes = new int[boxes.size()];
 			int i = 0;
 			for (Point box : boxes){
@@ -109,6 +115,18 @@ public class Level {
 		} catch (IOException e) {
 			throw new RuntimeException("Error reading file");
 		}
+
+		capacitors = new LinkedList<Capacitor>();
+		
+		capacitorMap = new LinkedList<Capacitor>[xsize][ysize]();
+		
+		isDeadlock = new boolean[xsize][ysize];
+		
+		calculateDeadlocks();
+		
+		calculateHallwayCapacitors();
+		calculateTwinsCapacitors();
+		calculateCornerCapacitors();
 		return;
 	}
 	
@@ -143,7 +161,26 @@ public class Level {
 	public boolean isBasicDeadlock(int x, int y) {
 		return this.isDeadlock[x][y];
 	}
-	
+
+	/**
+	 * Calculate simple Deadlocks.
+	 * 
+	 * This method figures out in what cells can a block be before going to a target.
+	 * Given the 1 to 1 relationship that exists between boxes an targets, if a box is
+	 * in, say, a corner, it will never be able to get to a target and the game is
+	 * over.
+	 * 
+	 * This algorithm starts with a box in every target and does a BFS by placing a
+	 * box in the target and after that, branches out placing a player in every
+	 * direction, with roles swaped (the box pushes the player). If the player ends
+	 * up in a legal position, the tile in which the box is gets marked as "step-able"
+	 * by a box. 
+	 */
+	private void calculateDeadlocks() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 	/**
 	 * This method scans the map for a "Hallway capacitor".
@@ -166,7 +203,7 @@ public class Level {
 	 *               #1 .  $ 2#
 	 */
 	private void calculateHallwayCapacitors(){
-		
+		// TODO
 	}
 	
 	/**
@@ -183,7 +220,7 @@ public class Level {
 	 * possible if that is the initial position, we'll be careful not to count it.
 	 */
 	private void calculateCornerCapacitors(){
-		
+		// TODO
 	}
 	
 	/**
@@ -210,13 +247,13 @@ public class Level {
 	 * 
 	 * A Twin set can also be of these forms:
 	 * 
-	 * ####        ####      ####
-	 * # 1         # 1       #  1
-	 * #  2        #  2      #  2
-	 * ####        # 3       #  3
-	 *             ####      ####
+	 * ####           ####    ######
+	 * #  1           #  1    #  $     <- this one looks like a corner capacitor
+	 * #  2           #  2    #  $     <- or a freeze deadlock
+	 * ####           #  3    #$$
+	 *                ####    #
 	 */
 	private void calculateTwinsCapacitors(){
-		
+		// TODO
 	}
 }
