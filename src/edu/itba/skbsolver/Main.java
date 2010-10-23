@@ -3,11 +3,9 @@ package edu.itba.skbsolver;
 import java.io.File;
 import java.security.InvalidParameterException;
 
-import com.sun.org.apache.xpath.internal.functions.WrongNumberArgsException;
-
 public class Main {
 	private static final String USAGE_HELP = 
-			"Usage: level-file method [tree] \n\n" + 
+			"Usage: skbsolver.jar level-file method [tree] \n" + 
 			"    level-file   The file of the level.\n" +
 			"    method   Either \"BFS\" or \"DFS.\n" +
 			"    tree   Wheter to output .dot file or not.";
@@ -20,7 +18,7 @@ public class Main {
 
 		try {
 			if (args.length < 2 || args.length > 3) {
-				throw new WrongNumberArgsException("Expected 2 or 3 parameters");
+				throw new Exception("Expected 2 or 3 parameters...\n");
 			}
 
 			level = new Level(new File(args[0]));
