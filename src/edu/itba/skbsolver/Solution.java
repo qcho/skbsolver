@@ -69,10 +69,13 @@ public class Solution {
 		px = current.player >> 16;
 		py = current.player & 0xFFFF;
 		
-		char[] how = {'u', 'l', 'd', 'r'};
+		char[] how = {'r', 'd', 'l', 'u'};
 		
 		while (px != rx && py != ry){
 			sol.append(how[lug[rx][ry]]);
+			int tx = dx[lug[rx][ry]];
+			ry -= dy[lug[rx][ry]];
+			rx -= tx;
 		}
 		
 		return sol.toString();
