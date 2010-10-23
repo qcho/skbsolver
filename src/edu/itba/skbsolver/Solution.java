@@ -34,10 +34,16 @@ public class Solution {
 		py = current.player & 0xFFFF;
 		
 		int[][] lug = new int[current.map.xsize][current.map.ysize];
+		char[][] map = new char[current.map.xsize][current.map.ysize];
+		
 		for (int i = 0; i < current.map.xsize; i++){
 			for (int j = 0; j < current.map.ysize; j++){
 				lug[i][j] = -1;
+				map[i][j] = current.map.get(i, j);
 			}
+		}
+		for (int box: current.boxes){
+			map[box >> 16][box & 0xFFFF] = '#';
 		}
 		
 		Deque<Point> queue = new LinkedList<Point>();
@@ -55,7 +61,7 @@ public class Solution {
 				rx = px + dx[d];
 				ry = py + dy[d];
 				
-				if (lug[rx][ry] == -1){
+				if (map[rx][ry] != '#' && lug[rx][ry] == -1){
 					lug[rx][ry] = d;
 					queue.addLast(new Point(rx, ry));
 				}
