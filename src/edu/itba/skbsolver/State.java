@@ -46,7 +46,7 @@ public class State implements Comparable<State>{
 	 * @param boxMoved
 	 * @param d
 	 */
-	public State(State s, int boxMoved, int direction, int playerMoves) {
+	public State(State s, int boxMoved, int direction, int playerMoves, int newHash) {
 		this.parent = s;
 		this.boxes = s.boxes.clone();
 		this.moves = s.moves + playerMoves;
@@ -54,13 +54,8 @@ public class State implements Comparable<State>{
 		this.player = s.boxes[boxMoved];
 		
 		this.boxes[boxMoved] += (dx[direction]<<16) + dy[direction];
-
-		// Update the Zobrist hash
-		this.hashCalculated = s.hashCalculated ^
-			map.playerZobrist[s.player>>16][s.player&0xFFFF] ^
-			map.boxZobrist[s.boxes[boxMoved]>>16][s.boxes[boxMoved]&0xFFFF]^
-  			map.playerZobrist[this.player>>16][this.player&0xFFFF] ^
-			map.boxZobrist[this.boxes[boxMoved]>>16][this.boxes[boxMoved]&0xFFFF];
+		
+		this.hashCalculated = newHash;
 	}
 
 	/**
@@ -128,5 +123,19 @@ public class State implements Comparable<State>{
 			return player - b.player;
 		}
 		return moves - b.moves;
+	}
+
+	public int hashIfMove(int d, int box) {
+		int ret = hashCalculated ^
+			map.playerZobrist[player>>16][player&0xFFFF] ^
+			map.boxZobrist[boxes[box]>>16][boxes[box]&0xFFFF];
+		
+		int np = player + (dx[d] << 16) + dy[d];
+		int nb = boxes[box] + (dx[d] << 16) + dy[d];
+		
+		ret ^= map.playerZobrist[np>>16][np&0xFFFF] ^
+			map.boxZobrist[nb>>16][nb&0xFFFF];
+		
+		return ret;
 	}
 }
