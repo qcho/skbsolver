@@ -200,12 +200,69 @@ public class State implements Comparable<State>{
 
 	public boolean triggersFreezeDeadlock(int boxMoved, int d) {
 		List<Integer> boxesAsWalls = new LinkedList<Integer>();
-		_freezeCheck(boxesAsWalls, boxes[boxMoved] + dx[d]<<16 + dy[d]);
-		return false;
+		return _freezeCheck(boxesAsWalls, boxes[boxMoved] + dx[d]<<16 + dy[d], 0);
 	}
 
-	private void _freezeCheck(List<Integer> boxesAsWalls, int box) {
+	private boolean _freezeCheck(List<Integer> boxesAsWalls, int box, int targets) {
 		int bx = box >> 16;
 		int by = box & 0xFFFF;
+		
+		targets += map.get(bx,by)=='.'? 1:0;
+		
+		boolean verticalBlocked = map.map[bx+1][by] == '#' || map.map[bx-1][by] == '#'
+			|| (map.isBasicDeadlock(bx + 1, by) && map.isBasicDeadlock(bx - 1, by));
+		if (!verticalBlocked){
+			for (Integer wall : boxesAsWalls){
+				if (wall == box + 1<<16 || wall == box - 1<<16){
+					verticalBlocked = true;
+				}
+			}
+		}
+		
+		boolean horizontalBlocked = map.map[bx][by+1] == '#' || map.map[bx][by-1] == '#'
+			|| (map.isBasicDeadlock(bx, by + 1) && map.isBasicDeadlock(bx, by-1));
+		if (!horizontalBlocked){
+			for (Integer wall : boxesAsWalls){
+				if (wall == box + 1 || wall == box - 1){
+					horizontalBlocked = true;
+				}
+			}
+		}
+		
+		if (verticalBlocked && horizontalBlocked){
+			boxesAsWalls.add(box);
+			if (boxesAsWalls.size() == targets){
+				return false;
+			} else {
+				// Lotery :D
+				map.addNewCapacitor(boxesAsWalls);
+				return true;
+			}
+		}
+		
+		if (verticalBlocked){
+			for (int abox : boxes){
+				if (abox == box + 1 || abox == box - 1){
+					boxesAsWalls.add(box);
+					if (_freezeCheck(boxesAsWalls, abox, targets)){
+						return true;
+					}
+					boxesAsWalls.remove(boxesAsWalls.size()-1);
+				}
+			}
+		}
+		if (horizontalBlocked){
+			for (int abox : boxes){
+				if (abox == box + (1<<16) || abox == box - (1<<16)){
+					boxesAsWalls.add(box);
+					if (_freezeCheck(boxesAsWalls, abox, targets)){
+						return true;
+					}
+					boxesAsWalls.remove(boxesAsWalls.size()-1);
+				}
+			}
+		}
+		
+		return false;
 	}
 }

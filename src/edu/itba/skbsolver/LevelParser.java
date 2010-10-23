@@ -68,7 +68,6 @@ public class LevelParser {
 	}
 
 	private String processLine(List<Integer> boxesBuffer, List<Integer> playerBuffer, int x, String line) {
-		logger.info("line " + line);
 		StringBuffer myLine = new StringBuffer();
 		
 		int y = 0;

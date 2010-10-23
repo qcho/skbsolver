@@ -289,4 +289,14 @@ public class Level extends LevelParser {
 	private void calculateTwinsCapacitors() {
 		// TODO
 	}
+	
+	/**
+	 * This method is used to dinamically add new capacitors.
+	 * 
+	 * @param boxesAsWalls
+	 */
+	public void addNewCapacitor(List<Integer> boxesAsWalls) {
+		// TODO Auto-generated method stub
+		
+	}
 }
