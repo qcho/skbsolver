@@ -109,7 +109,7 @@ public class StateSpawner{
 						}
 
 						if (noDeadlock){
-							if (s.triggersFreezeDeadlock(boxMoved, d)){
+							if (!s.triggersFreezeDeadlock(boxMoved, d)){
 
 								posTable.add(newHash);
 								

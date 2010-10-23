@@ -22,14 +22,14 @@ public class DFSRunner {
 			for(State n : newStates){
 				if (level.playerWin(n)){
 					winner = n;
-					stack.clear();
-					break;
+					level.logger.info("Found a solution: \n"+n.toString());
 				}
-				stack.add(n);
+				if (winner == null || n.moves < winner.moves){
+					stack.add(n);					
+				}
 			}
 		}
 		
-		// TODO: Rebuild solution from winner
 		return new Solution(winner);
 	}
 }

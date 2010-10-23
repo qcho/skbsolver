@@ -10,14 +10,12 @@ public class Main {
 	private static final String USAGE_HELP = 
 			"Usage: skbsolver.jar level-file method [tree] \n" + 
 			"    level-file   The file of the level.\n" +
-			"    method   Either \"BFS\" or \"DFS.\n" +
-			"    tree   Wheter to output .dot file or not.";
+			"    method       Either \"BFS\" or \"DFS\".\n" +
+			"    tree         Wheter to output .dot file or not.";
 	
 	final static Logger logger = LoggerFactory.getLogger(Main.class);
 
 	public static void main(String args[]) {
-		
-		
 
 		Solution sol = null;
 		boolean tree = false;
@@ -25,7 +23,7 @@ public class Main {
 
 		try {
 			if (args.length < 2) {
-				throw new Exception("Expected at least 2 arguments...\n");
+				throw new Exception("Expected at least 2 arguments.\n");
 			}
 
 			level = new Level(new File(args[0]));
@@ -45,12 +43,16 @@ public class Main {
 				throw new InvalidParameterException("Only BFS & DFS methods are provided.");
 			}
 
-			System.out.println("Best Solution: " + sol.movements);
-			
-			for (String s : sol.transitions){
-				System.out.println("    " + s);
+			if (sol != null){
+				System.out.println("Best Solution: " + sol.movements);
+				
+				for (String s : sol.transitions){
+					System.out.println("    " + s);
+				}
+			} else {
+				System.out.println("No solution found.");
 			}
-
+			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			System.out.println(USAGE_HELP);

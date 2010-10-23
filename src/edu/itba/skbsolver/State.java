@@ -2,6 +2,8 @@ package edu.itba.skbsolver;
 
 import java.awt.Point;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -57,7 +59,27 @@ public class State implements Comparable<State>{
 		
 		this.boxes[boxMoved] += (dx[direction]<<16) + dy[direction];
 		
+		/*
+		 * Este código mantiene ordenado el arreglo 
+		 * 
+			while (boxMoved > 0 && this.boxes[boxMoved-1] > this.boxes[boxMoved]){
+				swap(boxMoved, boxMoved - 1);
+				boxMoved--;
+			}
+			while (boxMoved + 1 < this.boxes.length && this.boxes[boxMoved] > this.boxes[boxMoved+1]){
+				swap(boxMoved, boxMoved + 1);
+				boxMoved++;
+			}
+		*/
+		
 		this.hashCalculated = newHash;
+	}
+
+	@SuppressWarnings("unused")
+	private void swap(int i, int j) {
+		int c = this.boxes[i];
+		this.boxes[i] = this.boxes[j];
+		this.boxes[j] = c;
 	}
 
 	/**
@@ -177,6 +199,13 @@ public class State implements Comparable<State>{
 	}
 
 	public boolean triggersFreezeDeadlock(int boxMoved, int d) {
+		List<Integer> boxesAsWalls = new LinkedList<Integer>();
+		_freezeCheck(boxesAsWalls, boxes[boxMoved] + dx[d]<<16 + dy[d]);
 		return false;
+	}
+
+	private void _freezeCheck(List<Integer> boxesAsWalls, int box) {
+		int bx = box >> 16;
+		int by = box & 0xFFFF;
 	}
 }

@@ -9,22 +9,24 @@ public class Solution {
 	public static final int[] dx = {0,1,0,-1};
 	public static final int[] dy = {1,0,-1,0};
 	
-	Deque<String> transitions;
-	Deque<State> states;
-	int movements;
+	Deque<String> transitions = null;
+	Deque<State> states = null;
+	int movements = -1;
 
 	public Solution(State winner) {
-		this.states = new LinkedList<State>();
-		this.transitions = new LinkedList<String>();
-		this.movements = winner.moves;
-		
-		states.addFirst(winner);
-		
-		while (winner.parent != null){
-			State current = winner;
-			winner = winner.parent;
-			transitions.addFirst(getTransition(current, winner));
+		if (winner != null){	
+			this.states = new LinkedList<State>();
+			this.transitions = new LinkedList<String>();
+			this.movements = winner.moves;
+			
 			states.addFirst(winner);
+			
+			while (winner.parent != null){
+				State current = winner;
+				winner = winner.parent;
+				transitions.addFirst(getTransition(current, winner));
+				states.addFirst(winner);
+			}
 		}
 	}
 
