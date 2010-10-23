@@ -105,8 +105,10 @@ public class StateSpawner{
 								// Freeze deadlock
 								
 								// Bipartite deadlock?
+								// I think bipartite deadlocks should be checked
+								// only if we just inserted a box into a target :D
 								
-								// Another deadlock
+								// Another deadlock???
 								
 								newStates.add(newState);
 							}

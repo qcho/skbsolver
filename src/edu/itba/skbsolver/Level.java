@@ -153,12 +153,17 @@ public class Level {
 	 * 
 	 * Example:
 	 * 		         ##########
-	 *               #  .  $  #
+	 *               #1 .  $ 2#
 	 * 
 	 * There, the sign "$" represents a box. The white spaces, and the point,
 	 * and the tile under the '$', is a "Hallway Set" of capacity 1. If
 	 * another box wants to get into the Set, it raises a Deadlock. 
 	 * 
+	 * This can be of this form, also (beware):
+	 * 
+	 *                  ###
+	 * 	             #### #####
+	 *               #1 .  $ 2#
 	 */
 	private void calculateHallwayCapacitors(){
 		
