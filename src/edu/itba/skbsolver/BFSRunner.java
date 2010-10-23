@@ -1,32 +1,30 @@
 package edu.itba.skbsolver;
 
-import java.util.Comparator;
-import java.util.Deque;
 import java.util.PriorityQueue;
 
 public class BFSRunner {
 	public static void run(Level level){
-		Comparator<State> stateComparator = new Comparator<State>(){
-			@Override
-			public int compare(State a, State b) {
-				if (a.moves == b.moves){
-					return a.player - b.player;
-				}
-				return a.moves - b.moves;
-			}
-		};
-		PriorityQueue<State> queue(stateComparator);
-		PositionsTable posTable;
-		StateSpawner stateSpawner(posTable);
-				
-		queue.push(level.getInitialState(), 0);
+		PriorityQueue<State> queue = new PriorityQueue<State>();
+		PositionsTable posTable = new PositionsTable();
+		StateSpawner stateSpawner = new StateSpawner(posTable, level);
+
+		State winner = null;
+		queue.add(level.getInitialState());
 		
-		while (!queue.empty()){
-			State s = queue.pop();
+		while (!queue.isEmpty()){
+			State s = queue.remove();
 			for(State n : stateSpawner.childs(s)){
-				
+				if (level.playerWin(n)){
+					winner = n;
+					queue.clear();
+					break;
+				}
+				queue.add(n);
 			}
 		}
+		
+		// TODO: Rebuild solution from winner
+
 	}
 
 }
