@@ -149,6 +149,14 @@ public class Level {
 		return initial;
 	}
 	
+	
+	/**
+	 * Return the tile in a given position 
+	 * 
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public char get(int x, int y){
 		return map[x].charAt(y);
 	}
@@ -165,6 +173,11 @@ public class Level {
 		return true;
 	}
 
+	/**
+	 * Get all capacitors for the level
+	 * 
+	 * @return
+	 */
 	public List<Capacitor> getCapacitors() {
 		return this.capacitors;
 	}

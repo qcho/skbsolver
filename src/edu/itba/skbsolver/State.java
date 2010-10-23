@@ -100,7 +100,17 @@ public class State implements Comparable<State>{
 		return new Point(px(), py());
 	}
 
+	/**
+	 * We are considering that two states are equal iff they have the same 
+	 * Zobrist hash. This may not be true!!! but is very likely (if it's
+	 * completely random, the chances are 1/4 billion) 
+	 * 
+	 * @param other
+	 * @return
+	 */
 	public boolean equals(State other){
+		return this.hashCalculated == other.hashCalculated;
+		/*
 		if (this.player != other.player){
 			return false;
 		}
@@ -110,6 +120,7 @@ public class State implements Comparable<State>{
 			}
 		}
 		return true;
+		*/
 	}
 	
 	public int hashCode(){

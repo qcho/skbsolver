@@ -66,13 +66,13 @@ public class StateSpawner{
 				tx = rx+dx[d];
 				ty = ry+dy[d];
 				
-				if (distance[rx][ry] == -1 && // Si no visité este tile y:
+				if (distance[rx][ry] == -1 && // Si no visité este tile, y además:
 						
-					level.get(rx,ry)!='#' &&  // no hay una pared, entro, pero solo sí:
+					level.get(rx,ry)!='#' &&  // si no hay una pared, entro, pero solo sí:
 					(   
-						boxIndex[rx][ry] == -1 || // <- No hay una caja, el tile está vacío	
+						boxIndex[rx][ry] == -1 || // <- No hay una caja, entonces el tile está vacío	
 						(
-								// o hay una caja ahí
+								// O hay una caja ahí
 								level.get(tx, ty) != '#'
 								
 								// y es movible:
