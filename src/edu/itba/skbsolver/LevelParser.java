@@ -39,7 +39,7 @@ public class LevelParser {
 			String str;
 
 			while ((str = in.readLine()) != null) {
-				lines.add(processLine(playerBuffer, boxesBuffer, xsize, str));
+				lines.add(processLine(boxesBuffer, playerBuffer, xsize, str));
 				
 				xsize++;
 				ysize = Math.max(ysize, str.length());

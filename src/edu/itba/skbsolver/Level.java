@@ -71,6 +71,8 @@ public class Level extends LevelParser {
 				capacitorMap[i][j] = new LinkedList<Capacitor>();
 			}
 		}
+		
+		logger.debug(new String(map[1]));
 
 		calculateDeadlocks();
 
