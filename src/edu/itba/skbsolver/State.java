@@ -200,16 +200,19 @@ public class State implements Comparable<State>{
 
 	public boolean triggersFreezeDeadlock(int boxMoved, int d) {
 		List<Integer> boxesAsWalls = new LinkedList<Integer>();
-		return _freezeCheck(boxesAsWalls, boxes[boxMoved] + dx[d]<<16 + dy[d], 0);
+		map.logger.info("Checking freeze...");
+		return _freezeCheck(boxesAsWalls, boxes[boxMoved] + (dx[d]<<16) + dy[d], 0);
 	}
 
 	private boolean _freezeCheck(List<Integer> boxesAsWalls, int box, int targets) {
 		int bx = box >> 16;
 		int by = box & 0xFFFF;
 		
+		map.logger.info("Checking freeze in " + bx + "," + by);
+		
 		targets += map.get(bx,by)=='.'? 1:0;
 		
-		boolean verticalBlocked = map.map[bx+1][by] == '#' || map.map[bx-1][by] == '#'
+		boolean verticalBlocked = map.get(bx+1, by) == '#' || map.get(bx-1, by) == '#'
 			|| (map.isBasicDeadlock(bx + 1, by) && map.isBasicDeadlock(bx - 1, by));
 		if (!verticalBlocked){
 			for (Integer wall : boxesAsWalls){
@@ -219,7 +222,7 @@ public class State implements Comparable<State>{
 			}
 		}
 		
-		boolean horizontalBlocked = map.map[bx][by+1] == '#' || map.map[bx][by-1] == '#'
+		boolean horizontalBlocked = map.get(bx, by+1) == '#' || map.get(bx, by-1) == '#'
 			|| (map.isBasicDeadlock(bx, by + 1) && map.isBasicDeadlock(bx, by-1));
 		if (!horizontalBlocked){
 			for (Integer wall : boxesAsWalls){
@@ -234,8 +237,8 @@ public class State implements Comparable<State>{
 			if (boxesAsWalls.size() == targets){
 				return false;
 			} else {
-				// Lotery :D
-				map.addNewCapacitor(boxesAsWalls);
+				// Lottery :D
+				map.addNewCapacitor(boxesAsWalls, targets);
 				return true;
 			}
 		}

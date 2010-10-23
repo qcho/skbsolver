@@ -94,7 +94,11 @@ public class Level extends LevelParser {
 	 * @return
 	 */
 	public char get(int x, int y) {
-		return map[x][y];
+		try{
+			return map[x][y];
+		} catch (ArrayIndexOutOfBoundsException e){
+			return (' ');
+		}
 	}
 
 	/**
@@ -133,8 +137,21 @@ public class Level extends LevelParser {
 		return (List<Capacitor>) this.capacitorMap[x][y];
 	}
 
+	/**
+	 * Check if a given position is a basic dead lock
+	 * 
+	 * 
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public boolean isBasicDeadlock(int x, int y) {
-		return this.isDeadlock[x][y];
+		try{
+			return this.isDeadlock[x][y];
+		} catch (ArrayIndexOutOfBoundsException e){
+			return true;
+		}
+		
 	}
 
 	/**
@@ -295,8 +312,12 @@ public class Level extends LevelParser {
 	 * 
 	 * @param boxesAsWalls
 	 */
-	public void addNewCapacitor(List<Integer> boxesAsWalls) {
+	public void addNewCapacitor(List<Integer> boxesAsWalls, int targets) {
 		// TODO Auto-generated method stub
-		
+		Capacitor cap = new Capacitor(boxesAsWalls.size() - targets - 1);
+		for (Integer Box : boxesAsWalls){
+			int box = Box;
+			this.getCapacitorsByPos(box >> 16, box & 0xFFFF).add(cap);
+		}
 	}
 }
