@@ -4,6 +4,8 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
+import edu.itba.skbsolver.exception.TileSetCapacityExceeded;
+
 public class StateSpawner{
 
 	public static final int[] dx = {0,1,0,-1};
@@ -23,7 +25,8 @@ public class StateSpawner{
 		int[][] distance = new int[level.xsize][level.ysize];
 		int[][] boxIndex = new int[level.xsize][level.ysize];
 
-		int px, py, rx, ry, p, r, boxMoved;
+		int px, py, rx, ry, tx, ty, p, r, boxMoved;
+		boolean noDeadlock;
 		
 		
 		// Initialize auxiliar vectors
@@ -35,11 +38,15 @@ public class StateSpawner{
 		for (Capacitor cap : level.getCapacitors()){
 			cap.reset();
 		}
-		for (int i = 0; i < s.boxes.length; i++){
-			boxIndex[s.boxes[i] >> 16][s.boxes[i] & 0xFFFF] = i;
-			for (Capacitor cap : level.getCapacitorsByPos(s.boxes[i]>>16, s.boxes[i] & 0xFFFF)){
-				cap.countPlus();
+		try{
+			for (int i = 0; i < s.boxes.length; i++){
+				boxIndex[s.boxes[i] >> 16][s.boxes[i] & 0xFFFF] = i;
+				for (Capacitor cap : level.getCapacitorsByPos(s.boxes[i]>>16, s.boxes[i] & 0xFFFF)){
+					cap.countPlus();
+				}
 			}
+		} catch (TileSetCapacityExceeded tS){ // This should not happen :)
+			return new LinkedList<State>();
 		}
 
 		// Put first element on queue
@@ -55,6 +62,9 @@ public class StateSpawner{
 				rx = px+dx[d];
 				ry = py+dy[d];
 				
+				tx = rx+dx[d];
+				ty = ry+dy[d];
+				
 				if (distance[rx][ry] == -1 && // Si no visité este tile y:
 						
 					level.get(rx,ry)!='#' &&  // no hay una pared, entro, pero solo sí:
@@ -62,27 +72,44 @@ public class StateSpawner{
 						boxIndex[rx][ry] == -1 || // <- No hay una caja, el tile está vacío	
 						(
 								// o hay una caja ahí
-								level.get(rx+dx[d], ry+dy[d]) != '#'
+								level.get(tx, ty) != '#'
 								
 								// y es movible:
-								&& boxIndex[rx+dx[d]][ry+dy[d]] == -1
+								&& boxIndex[tx][ty] == -1
 						
-								// and TODO: Check if no simple deadlocks are triggered
+								// and is a "step-able" tile
+								&& !level.isBasicDeadlock(tx, ty)
 						)
 					)
 				) {
+					noDeadlock = true;
+										
 					r = (rx<<16)+ry;
 					
 					boxMoved = boxIndex[rx][ry];
 					
 					if (boxMoved != -1) {
 						
-						State newState = new State(s, boxMoved, d, distance[rx][ry]);
-						if (!posTable.has(newState)){
-							
-							// TODO: Check for further and heavier deadlocks
-							
-							newStates.add(newState);
+						for (Capacitor cap : level.getCapacitorsByPos(tx, ty)){
+							if(!cap.canIstepInto()){
+								noDeadlock = false;
+							}
+						}
+
+						if (noDeadlock){
+							State newState = new State(s, boxMoved, d, distance[rx][ry]);
+							if (!posTable.has(newState)){
+								
+								// TODO: Check for further and heavier deadlocks
+								
+								// Freeze deadlock
+								
+								// Bipartite deadlock?
+								
+								// Another deadlock
+								
+								newStates.add(newState);
+							}
 						}
 					}
 					

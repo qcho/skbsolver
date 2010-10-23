@@ -26,6 +26,8 @@ public class Level {
 	
 	private List<Capacitor>[][] capacitorMap;
 	
+	private boolean[][] isDeadlock;
+	
 	// TODO: Calculate this when building level
 	public int xsize;
 	public int ysize;
@@ -136,5 +138,9 @@ public class Level {
 	
 	public List<Capacitor> getCapacitorsByPos(int x, int y){
 		return this.capacitorMap[x][y];
+	}
+
+	public boolean isBasicDeadlock(int x, int y) {
+		return this.isDeadlock[x][y];
 	}
 }
