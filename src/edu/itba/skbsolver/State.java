@@ -156,7 +156,7 @@ public class State implements Comparable<State>{
 		
 		Point pl = new Point(player >> 16, player & 0xFFFF);
 		m.put(pl, map.get(pl.x, pl.y));
-		map.map[pl.x][pl.y] = '$';
+		map.map[pl.x][pl.y] = '@';
 		
 		for (int box: boxes){
 			pl = new Point(box >> 16, box & 0xFFFF);
