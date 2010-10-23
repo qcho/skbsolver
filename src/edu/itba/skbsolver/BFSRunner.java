@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 public class BFSRunner {
-	public static Solution run(Level level){
+	public static Solution run(Level level, boolean tree){
 		PriorityQueue<State> queue = new PriorityQueue<State>();
 		PositionsTable posTable = new PositionsTable();
 		StateSpawner stateSpawner = new StateSpawner(posTable, level);

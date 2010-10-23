@@ -1,13 +1,13 @@
 package edu.itba.skbsolver;
 
 import java.awt.Point;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Random;
 
 
@@ -54,7 +54,7 @@ public class Level {
 	 * 
 	 * @param fileName
 	 */
-	Level(String fileName){
+	Level(File file){
 		List<Point> boxes = new LinkedList<Point>();
 		List<String> lines = new LinkedList<String>();
 		int player = 0;
@@ -64,7 +64,7 @@ public class Level {
 		// Load files
 		InputStream istream = null;
 		try {
-			istream = new FileInputStream(fileName);
+			istream = new FileInputStream(file);
 		} catch (Exception e){
 			throw new RuntimeException("Could not open file");
 		}
