@@ -1,19 +1,20 @@
 package edu.itba.skbsolver;
 
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 
-public class BFSRunner {
+public class DFSRunner {
 	public static Solution run(Level level){
-		PriorityQueue<State> queue = new PriorityQueue<State>();
+		Deque<State> stack = new LinkedList<State>();
 		PositionsTable posTable = new PositionsTable();
 		StateSpawner stateSpawner = new StateSpawner(posTable, level);
 
 		State winner = null;
-		queue.add(level.getInitialState());
+		stack.addFirst(level.getInitialState());
 		
-		while (!queue.isEmpty()){
-			State s = queue.remove();
+		while (!stack.isEmpty()){
+			State s = stack.removeFirst();
 			List<State> newStates = stateSpawner.childs(s);
 			
 			// TODO: reorder states with a Heuristic
@@ -21,14 +22,14 @@ public class BFSRunner {
 			for(State n : newStates){
 				if (level.playerWin(n)){
 					winner = n;
-					queue.clear();
+					stack.clear();
 					break;
 				}
-				queue.add(n);
+				stack.add(n);
 			}
 		}
 		
+		// TODO: Rebuild solution from winner
 		return new Solution(winner);
 	}
-
 }

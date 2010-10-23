@@ -366,11 +366,12 @@ public class Level {
 	 * 
 	 * A Twin set can also be of these forms:
 	 * 
-	 * ####           ####    ######
-	 * #  1           #  1    #  $     <- this one looks like a corner capacitor
-	 * #  2           #  2    #  $     <- or a freeze deadlock
-	 * ####           #  3    #$$
-	 *                ####    #
+	 * ####           ####         ######
+	 * # 31           # 41         #  1     <- this one looks like a corner capacitor
+	 * # 42           # 52         # 52     <- or a freeze deadlock
+	 * ####           # 63         #43
+	 *  cap: 1        ####         #
+	 *                cap: 2        cap: 3
 	 */
 	private void calculateTwinsCapacitors(){
 		// TODO
