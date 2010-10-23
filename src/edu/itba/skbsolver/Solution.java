@@ -50,6 +50,7 @@ public class Solution {
 		
 		queue.addLast(new Point(px, py));
 		lug[px][py] = 0;
+		map[next.player>>16][next.player & 0xFFFF] = ' ';
 		
 		while (!queue.isEmpty()){
 			Point p = queue.removeFirst();
