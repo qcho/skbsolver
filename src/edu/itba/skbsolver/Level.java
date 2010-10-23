@@ -143,4 +143,75 @@ public class Level {
 	public boolean isBasicDeadlock(int x, int y) {
 		return this.isDeadlock[x][y];
 	}
+	
+	
+	/**
+	 * This method scans the map for a "Hallway capacitor".
+	 * 
+	 * These are a set of tiles that, once a box gets into some tile, it can
+	 * not escape, but there can be a target in that set.
+	 * 
+	 * Example:
+	 * 		         ##########
+	 *               #  .  $  #
+	 * 
+	 * There, the sign "$" represents a box. The white spaces, and the point,
+	 * and the tile under the '$', is a "Hallway Set" of capacity 1. If
+	 * another box wants to get into the Set, it raises a Deadlock. 
+	 * 
+	 */
+	private void calculateHallwayCapacitors(){
+		
+	}
+	
+	/**
+	 * This method scans the map for "Corner capacitors".
+	 * 
+	 * When the map contains a corner of this form:
+	 * 
+	 *       ###
+	 *       #32
+	 *       #1
+	 * 
+	 * And the tiles 1 and 2 are occupied by boxes, that is a deadlock right there,
+	 * except in the case that the player is in the tile 3. Since that can be only 
+	 * possible if that is the initial position, we'll be careful not to count it.
+	 */
+	private void calculateCornerCapacitors(){
+		
+	}
+	
+	/**
+	 * This method scans the map for "Twin capacitors".
+	 * 
+	 * A set of tiles is said to be a "Twin capacitor set" if it is of this form:
+	 * 
+	 * ###
+	 * # 1
+	 * # 2
+	 * # 3
+	 * ###
+	 * 
+	 * In this case, moving any of these boxes triggers corner capacitors. But it
+	 * may be the case that they're of this form:
+	 * 
+	 * ###
+	 * #.3
+	 * #.2
+	 * #.1
+	 * ###
+	 * 
+	 * So the amount of targets inside the area is also counted.
+	 * 
+	 * A Twin set can also be of these forms:
+	 * 
+	 * ####        ####      ####
+	 * # 1         # 1       #  1
+	 * #  2        #  2      #  2
+	 * ####        # 3       #  3
+	 *             ####      ####
+	 */
+	private void calculateTwinsCapacitors(){
+		
+	}
 }
