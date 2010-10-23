@@ -146,4 +146,24 @@ public class State implements Comparable<State>{
 		
 		return ret;
 	}
+	
+	public String toString(){
+		StringBuffer s = new StringBuffer();
+		
+		s.append("Player position: ");
+		s.append(player>>16);
+		s.append(',');
+		s.append(player & 0xFFFF);
+		s.append('\n');
+		
+		for (int box: boxes){
+			s.append("Box in position: ");
+			s.append(box>>16);
+			s.append(',');
+			s.append(box & 0xFFFF);
+			s.append('\n');
+		}
+		
+		return s.toString();
+	}
 }
