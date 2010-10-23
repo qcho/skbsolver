@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -122,6 +123,8 @@ public class Level {
 		
 		isDeadlock = new boolean[xsize][ysize];
 		
+		createZobristKeys();
+		
 		calculateDeadlocks();
 		
 		calculateHallwayCapacitors();
@@ -161,6 +164,22 @@ public class Level {
 	public boolean isBasicDeadlock(int x, int y) {
 		return this.isDeadlock[x][y];
 	}
+	
+	/**
+	 * Create zobrist random strings.
+	 */
+	private void createZobristKeys() {
+		Random randGen = new Random(xsize + ysize);
+		playerZobrist = new int[xsize][ysize];
+		boxZobrist = new int[xsize][ysize];
+		for (int i = 0; i < xsize; i++){
+			for (int j = 0; j < ysize; j++){
+				playerZobrist[i][j] = randGen.nextInt();
+				boxZobrist[i][j] = randGen.nextInt();
+			}
+		}
+	}
+
 
 	/**
 	 * Calculate simple Deadlocks.
