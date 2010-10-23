@@ -25,7 +25,7 @@ public class Level {
 
 	private List<Capacitor> capacitors;
 	
-	private List<Capacitor>[][] capacitorMap;
+	private Object[][] capacitorMap;
 	
 	private boolean[][] isDeadlock;
 	
@@ -119,9 +119,16 @@ public class Level {
 
 		capacitors = new LinkedList<Capacitor>();
 		
-		capacitorMap = new LinkedList<Capacitor>[xsize][ysize]();
-		
+		capacitorMap = new Object[xsize][ysize];
+
 		isDeadlock = new boolean[xsize][ysize];
+		
+		for(int i = 0; i < xsize; i++){
+			for(int j = 0; j < ysize; j++){
+				isDeadlock[i][j] = true;
+				capacitorMap[i][j] = new LinkedList<Capacitor>();
+			}
+		}
 		
 		createZobristKeys();
 		
@@ -158,7 +165,7 @@ public class Level {
 	}
 	
 	public List<Capacitor> getCapacitorsByPos(int x, int y){
-		return this.capacitorMap[x][y];
+		return (List<Capacitor>) this.capacitorMap[x][y];
 	}
 
 	public boolean isBasicDeadlock(int x, int y) {
