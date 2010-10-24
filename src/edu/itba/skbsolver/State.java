@@ -163,21 +163,19 @@ public class State implements Comparable<State> {
 	 * @return a new hash
 	 */
 	public int hashIfMove(int d, int box) {
-		int ret = hashCalculated
-				^ map.playerZobrist[player >> 16][player & 0xFFFF]
-				^ map.boxZobrist[boxes[box] >> 16][boxes[box] & 0xFFFF];
+		int ret = hashCalculated;
+		ret ^= map.playerZobrist[player >> 16][player & 0xFFFF];
+		ret ^= map.boxZobrist[boxes[box] >> 16][boxes[box] & 0xFFFF];
 
-		int np = player + (dx[d] << 16) + dy[d];
-		int nb = boxes[box] + (dx[d] << 16) + dy[d];
-
-		ret ^= map.playerZobrist[np >> 16][np & 0xFFFF]
-				^ map.boxZobrist[nb >> 16][nb & 0xFFFF];
+		ret ^= map.playerZobrist[boxes[box] >> 16][boxes[box] & 0xFFFF];
+		ret ^= map.boxZobrist[(boxes[box]>>16)+dx[d]][(boxes[box]&0xFFFF)+dy[d]];
 
 		return ret;
 	}
 
 	public String toString() {
 		StringBuilder s = new StringBuilder();
+		s.append(hashCalculated);
 
 		Map<Point, Character> m = new HashMap<Point, Character>();
 
