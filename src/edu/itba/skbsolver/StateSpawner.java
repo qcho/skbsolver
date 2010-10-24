@@ -143,7 +143,7 @@ public class StateSpawner {
 								posTable.add(newHash);
 
 								State newState = new State(s, boxMoved, d,
-										distance[rx][ry][h], newHash);
+										distance[px][py][h]+1, newHash);
 
 								// TODO: Bipartite deadlock?
 								// I think bipartite deadlocks should be checked
