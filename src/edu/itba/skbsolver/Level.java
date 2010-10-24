@@ -336,6 +336,7 @@ public class Level extends LevelParser {
 		// TODO Auto-generated method stub
 		logger.info("New Capacitor :)");
 		Capacitor cap = new Capacitor(boxesAsWalls.size() - targets - 1);
+		capacitors.add(cap);
 		for (Integer Box : boxesAsWalls) {
 			int box = Box;
 			this.getCapacitorsByPos(box >> 16, box & 0xFFFF).add(cap);
