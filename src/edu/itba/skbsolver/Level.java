@@ -72,8 +72,20 @@ public class Level extends LevelParser {
 			}
 		}
 
+		
 		calculateDeadlocks();
 
+		StringBuilder s = new StringBuilder();
+		for (int i = 0; i < xsize; i++){
+			for (j = 0; j < ysize; j++){
+				if (map[i][j] == '#') s.append('#');
+				if (map[i][j] == ' ' || map[i][j] == '.') s.append(isDeadlock[i][j]?'X':'O');
+			}
+			s.append('\n');
+		}
+		logger.info("These are deadlocks: \n" + s.toString());
+		
+		
 		calculateHallwayCapacitors();
 		calculateTwinsCapacitors();
 		calculateCornerCapacitors();
@@ -222,7 +234,7 @@ public class Level extends LevelParser {
 	 * This works the following way:
 	 * 
 	 * For the entire game, each tile is asigned a random string generated at
-	 * the beggining of the game. When a piece gets into that tile, the State
+	 * the begining of the game. When a piece gets into that tile, the State
 	 * key gets XORed with the Zobrist key of that tile. A piece in Sokoban can
 	 * be either a player or a box, so we create two different zobrist keys.
 	 * 
@@ -248,15 +260,14 @@ public class Level extends LevelParser {
 	 * These are a set of tiles that, once a box gets into some tile, it can not
 	 * escape, but there can be a target in that set.
 	 * 
-	 * Example: ########## #1 . $ 2#
+	 * Example:    
+	 *          ########
+	 * 		    # 1.$2 #
 	 * 
 	 * There, the sign "$" represents a box. The white spaces, and the point,
 	 * and the tile under the '$', is a "Hallway Set" of capacity 1. If another
 	 * box wants to get into the Set, it raises a Deadlock.
 	 * 
-	 * This can be of this form, also (beware):
-	 * 
-	 * ### #### ##### #1 . $ 2#
 	 */
 	private void calculateHallwayCapacitors() {
 		// TODO
@@ -267,7 +278,9 @@ public class Level extends LevelParser {
 	 * 
 	 * When the map contains a corner of this form:
 	 * 
-	 * ### #32 #1
+	 * ###
+	 * # 2
+	 * #1
 	 * 
 	 * And the tiles 1 and 2 are occupied by boxes, that is a deadlock right
 	 * there, except in the case that the player is in the tile 3. Since that
@@ -284,20 +297,31 @@ public class Level extends LevelParser {
 	 * A set of tiles is said to be a "Twin capacitor set" if it is of this
 	 * form:
 	 * 
-	 * ### # 1 # 2 # 3 ###
+	 * ###
+	 * # 1
+	 * # 2
+	 * # 3
+	 * ###
 	 * 
 	 * In this case, moving any of these boxes triggers corner capacitors. But
 	 * it may be the case that they're of this form:
 	 * 
-	 * ### #.3 #.2 #.1 ###
+	 * ###
+	 * #.3
+	 * #.2
+	 * #.1
+	 * ###
 	 * 
 	 * So the amount of targets inside the area is also counted.
 	 * 
 	 * A Twin set can also be of these forms:
 	 * 
-	 * #### #### ###### # 31 # 41 # 1 <- this one looks like a corner capacitor
-	 * # 42 # 52 # 52 <- or a freeze deadlock #### # 63 #43 cap: 1 #### # cap: 2
-	 * cap: 3
+	 * ####         ####             ######
+	 * # 31         # 41             # 1 <- this one looks like a corner capacitor
+	 * # 42         # 52             # 52 <- or a freeze deadlock
+	 * ####         # 63             #43
+	 * cap: 1       ####             # cap: 2
+	 *               cap: 3
 	 */
 	private void calculateTwinsCapacitors() {
 		// TODO

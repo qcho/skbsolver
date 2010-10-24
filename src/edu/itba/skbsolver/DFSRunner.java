@@ -25,7 +25,7 @@ public class DFSRunner {
 					level.logger.info("Found a solution: \n" + n.toString());
 				}
 				if (winner == null || n.moves < winner.moves) {
-					stack.add(n);
+					stack.addFirst(n);
 				}
 			}
 		}

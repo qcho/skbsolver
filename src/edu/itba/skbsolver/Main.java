@@ -43,7 +43,7 @@ public class Main {
 						"Only BFS & DFS methods are provided.");
 			}
 
-			if (sol != null) {
+			if (sol.movements != -1) {
 				System.out.println("Best Solution: " + sol.movements);
 
 				for (String s : sol.transitions) {

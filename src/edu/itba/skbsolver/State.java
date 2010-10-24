@@ -216,11 +216,6 @@ public class State implements Comparable<State> {
 
 	private boolean _freezeCheck(List<Integer> boxesAsWalls, int box,
 			int targets) {
-		for (Integer wall : boxesAsWalls) {
-			if (wall == box) {
-				return false;
-			}
-		}
 
 		int bx = box >> 16;
 		int by = box & 0xFFFF;
@@ -235,7 +230,7 @@ public class State implements Comparable<State> {
 						bx - 1, by));
 		if (!verticalBlocked) {
 			for (Integer wall : boxesAsWalls) {
-				if (wall == box + 1 << 16 || wall == box - 1 << 16) {
+				if (wall == box + (1 << 16) || wall == box - (1 << 16)) {
 					verticalBlocked = true;
 				}
 			}
@@ -254,11 +249,11 @@ public class State implements Comparable<State> {
 		}
 
 		if (verticalBlocked && horizontalBlocked) {
-			boxesAsWalls.add(box);
-			if (boxesAsWalls.size() == targets) {
+			if (boxesAsWalls.size() + 1 == targets) {
 				return false;
 			} else {
 				// Lottery :D
+				boxesAsWalls.add(box);
 				map.addNewCapacitor(boxesAsWalls, targets);
 				return true;
 			}
