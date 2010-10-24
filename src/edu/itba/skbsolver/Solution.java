@@ -24,10 +24,10 @@ public class Solution {
 			winner.map.logger.info("The solution is: \n" + winner.toString());
 			
 			while (winner.parent != null) {
-				State current = winner;
-				winner = winner.parent;
+				State current = winner.parent;
 				transitions.addFirst(getTransition(current, winner));
 				states.addFirst(winner);
+				winner = winner.parent;
 			}
 		}
 	}
