@@ -317,7 +317,7 @@ public class Level extends LevelParser {
 	 * A Twin set can also be of these forms:
 	 * 
 	 * ####         ####             ######
-	 * # 31         # 41             # 1 <- this one looks like a corner capacitor
+	 * # 31         # 41             #  1 <- this one looks like a corner capacitor
 	 * # 42         # 52             # 52 <- or a freeze deadlock
 	 * ####         # 63             #43
 	 * cap: 1       ####             # cap: 2
@@ -334,8 +334,8 @@ public class Level extends LevelParser {
 	 */
 	public void addNewCapacitor(List<Integer> boxesAsWalls, int targets) {
 		// TODO Auto-generated method stub
-		logger.info("New Capacitor :)");
-		Capacitor cap = new Capacitor(boxesAsWalls.size() - targets - 1);
+		logger.info("New Capacitor :). It's capacity is " + (boxesAsWalls.size() + targets - 1));
+		Capacitor cap = new Capacitor(boxesAsWalls.size() + targets - 1);
 		capacitors.add(cap);
 		for (Integer Box : boxesAsWalls) {
 			int box = Box;

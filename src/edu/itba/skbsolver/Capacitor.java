@@ -16,10 +16,10 @@ public class Capacitor {
 	}
 
 	public void countPlus() throws TileSetCapacityExceeded {
-		this.amount++;
 		if (this.amount == this.capacity) {
 			throw new TileSetCapacityExceeded();
 		}
+		this.amount++;
 	}
 
 	public boolean isFull() {

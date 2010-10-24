@@ -53,6 +53,7 @@ public class StateSpawner {
 				}
 			}
 		} catch (TileSetCapacityExceeded tS) { // This should not happen :)
+			level.logger.info("But happened!");
 			return new LinkedList<State>();
 		}
 
