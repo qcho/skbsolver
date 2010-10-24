@@ -6,6 +6,8 @@ import java.security.InvalidParameterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.itba.skbsolver.dot.DotPrinter;
+
 public class Main {
 	private static final String USAGE_HELP = "Usage: skbsolver.jar level-file method [tree] \n"
 			+ "    level-file   The file of the level.\n"
@@ -15,9 +17,11 @@ public class Main {
 	final static Logger logger = LoggerFactory.getLogger(Main.class);
 
 	public static void main(String args[]) {
+		
+		long start = System.currentTimeMillis();
 
 		Solution sol = null;
-		boolean tree = false;
+		DotPrinter dotPrinter = null;
 		Level level = null;
 
 		try {
@@ -28,16 +32,17 @@ public class Main {
 			level = new Level(new File(args[0]));
 
 			if (args.length == 3 && "tree".equals(args[2])) {
-				tree = true;
+				dotPrinter = DotPrinter.getInstance();
+				dotPrinter.init(new File(args[0].replace(".level", ".dot")));
 			}
 
 			if ("BFS".equals(args[1])) {
 				System.out.println("Running BFS");
-				sol = BFSRunner.run(level, tree);
+				sol = BFSRunner.run(level, dotPrinter);
 
 			} else if ("DFS".equals(args[1])) {
 				System.out.println("Running DFS");
-				sol = DFSRunner.run(level, tree);
+				sol = DFSRunner.run(level, dotPrinter);
 			} else {
 				throw new InvalidParameterException(
 						"Only BFS & DFS methods are provided.");
@@ -56,6 +61,15 @@ public class Main {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			System.out.println(USAGE_HELP);
+		} finally {
+			long end = System.currentTimeMillis();
+			
+			if (dotPrinter != null){
+				String footer = "Execution time was "+(end-start)+" ms.";
+				dotPrinter.close(footer);
+				System.out.println(footer);
+			}
+			
 		}
 
 	}

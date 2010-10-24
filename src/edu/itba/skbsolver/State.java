@@ -175,7 +175,7 @@ public class State implements Comparable<State> {
 
 	public String toString() {
 		StringBuilder s = new StringBuilder();
-		s.append(Integer.toHexString(hashCalculated) + "\n");
+//		s.append(Integer.toHexString(hashCalculated) + "\n");
 
 		Map<Point, Character> m = new HashMap<Point, Character>();
 
