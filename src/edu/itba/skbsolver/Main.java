@@ -34,6 +34,7 @@ public class Main {
 			if (args.length == 3 && "tree".equals(args[2])) {
 				dotPrinter = DotPrinter.getInstance();
 				dotPrinter.init(new File(args[0].replace(".level", ".dot")));
+				dotPrinter.addState(level.initial);
 			}
 
 			if ("BFS".equals(args[1])) {

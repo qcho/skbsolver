@@ -58,7 +58,8 @@ public class DotPrinter {
 			// Start writing headers
 			this.writter.append("graph sokoban {");
 			this.writter.newLine();
-			this.writter.append("node [ shape=box, fontname=Courier, fontsize=10];");
+			this.writter.append("node [ shape=box, fontname=Courier, fontsize=6];");
+			this.writter.append("edge [fontname=Courier, fontsize=8];");
 			this.writter.newLine();
 			this.writter.newLine();
 
@@ -70,19 +71,25 @@ public class DotPrinter {
 
 	}
 	
+	public void addNode(String current, String label) throws IOException{
+		this.writter.append(current + " [label=\"" + label + "\"];");
+		this.writter.newLine();	
+	}
+	
+	public void addEdge(String parent, String current, String label) throws IOException{
+		this.writter.append(parent + " -- " + current + " [label=\"" + label + "\"];");
+		this.writter.newLine();
+	}
+	
 	public void addState(State s){
 		try {
-			//Added "s" in order to prevent 0-9 starting hashes.
-			String parent = "s" + Integer.toHexString(s.parent.hashCode());
 			String current = "s" + Integer.toHexString(s.hashCode());
-			
-			// Start writing to the output stream
-			this.writter.append(current + " [label=\"" + s.toString().replace("\n", "\\n") + "\"];");
+			addNode(current, s.toString().replace("\n", "\\n"));
+			if(s.parent != null){
+				String parent = "s" + Integer.toHexString(s.parent.hashCode());
+				addEdge(parent, current, "" + (s.moves - s.parent.moves));
+			}
 			this.writter.newLine();
-			this.writter.append(parent + " -- " + current + ";");
-			this.writter.newLine();
-			this.writter.newLine();
-			
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
