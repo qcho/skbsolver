@@ -113,18 +113,16 @@ public class StateSpawner {
 						}
 
 						// Si no dispara un Capacitor Deadlock
-						// This is kind of a easy check, let's do this before
-						// the freeze deadlock
 						if (noDeadlock) {
 							for (Capacitor cap : level.getCapacitorsByPos(rx, ry)){
 								try{
 									cap.countMinus();
 								} catch (TileSetCapacityExceeded e){
-									level.logger.error("This should never happen.");
+									level.logger.error("This should never happen. " +
+										"Removing boxes from a capacitor not full.");
 								}
 							}
-							for (Capacitor cap : level.getCapacitorsByPos(tx,
-									ty)) {
+							for (Capacitor cap : level.getCapacitorsByPos(tx, ty)) {
 								if (!cap.canIstepInto()) {
 									noDeadlock = false;
 								}
@@ -133,7 +131,8 @@ public class StateSpawner {
 								try{
 									cap.countPlus();
 								} catch (TileSetCapacityExceeded e){
-									level.logger.error("This should never happen.");
+									level.logger.error("This should never happen. " +
+								        "A Capacitor has been triggered.");
 								}
 							}
 						}
@@ -149,7 +148,6 @@ public class StateSpawner {
 								// TODO: Bipartite deadlock?
 								// I think bipartite deadlocks should be checked
 								// only if we just inserted a box into a target
-								// :D
 
 								// TODO: Other deadlock???
 								

@@ -175,7 +175,7 @@ public class State implements Comparable<State> {
 
 	public String toString() {
 		StringBuilder s = new StringBuilder();
-		s.append(hashCalculated);
+		s.append(Integer.toHexString(hashCalculated) + "\n");
 
 		Map<Point, Character> m = new HashMap<Point, Character>();
 
@@ -203,7 +203,7 @@ public class State implements Comparable<State> {
 
 	public boolean triggersFreezeDeadlock(int boxMoved, int d) {
 		List<Integer> boxesAsWalls = new LinkedList<Integer>();
-		map.logger.info("Checking freeze...");
+		map.logger.info("Checking for a Freeze Deadlock:");
 
 		boxes[boxMoved] += ((dx[d] << 16) + dy[d]);
 		boolean result = _freezeCheck(boxesAsWalls, boxes[boxMoved], 0);
@@ -218,7 +218,7 @@ public class State implements Comparable<State> {
 		int bx = box >> 16;
 		int by = box & 0xFFFF;
 
-		map.logger.info("Checking freeze in " + bx + "," + by);
+		map.logger.info("    Checking freeze in " + bx + "," + by);
 
 		targets += map.get(bx, by) == '.' ? 1 : 0;
 
