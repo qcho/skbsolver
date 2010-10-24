@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * @author eordano
  */
 public class Level extends LevelParser {
-	
+
 	final static Logger logger = LoggerFactory.getLogger(Level.class);
 
 	public static final int[] dx = { 0, 1, 0, -1 };
@@ -32,13 +32,13 @@ public class Level extends LevelParser {
 	// This map returns what tiles are "step-able" by boxes without triggering
 	// a simple deadlock. Example: a box trapped in a corner
 	private boolean[][] isDeadlock;
-	
+
 	// TODO: a vector with distances to the nearest targets to use in heuristics
 	public int[][] heuristicDistance;
 
 	// A representation of the initial status
 	public State initial;
-	
+
 	/**
 	 * Create a Scenario from a filename. The initial position of things is
 	 * stored locally and can be accessed with getInitialSnap().
@@ -50,15 +50,15 @@ public class Level extends LevelParser {
 
 		int[] initialBoxes = new int[boxesBuffer.size()];
 		int j = 0;
-		for (Integer box: boxesBuffer){
+		for (Integer box : boxesBuffer) {
 			initialBoxes[j++] = box;
 		}
-		
+
 		// Zobrist Keys must be created before creating the initial State
 		createZobristKeys();
-		
+
 		initial = new State(initialBoxes, playerBuffer.get(0), this, 0);
-		
+
 		capacitors = new LinkedList<Capacitor>();
 
 		capacitorMap = new Object[xsize][ysize];
@@ -71,8 +71,6 @@ public class Level extends LevelParser {
 				capacitorMap[i][j] = new LinkedList<Capacitor>();
 			}
 		}
-		
-		logger.debug(new String(map[1]));
 
 		calculateDeadlocks();
 
@@ -94,9 +92,9 @@ public class Level extends LevelParser {
 	 * @return
 	 */
 	public char get(int x, int y) {
-		try{
+		try {
 			return map[x][y];
-		} catch (ArrayIndexOutOfBoundsException e){
+		} catch (ArrayIndexOutOfBoundsException e) {
 			return (' ');
 		}
 	}
@@ -146,12 +144,12 @@ public class Level extends LevelParser {
 	 * @return
 	 */
 	public boolean isBasicDeadlock(int x, int y) {
-		try{
+		try {
 			return this.isDeadlock[x][y];
-		} catch (ArrayIndexOutOfBoundsException e){
+		} catch (ArrayIndexOutOfBoundsException e) {
 			return true;
 		}
-		
+
 	}
 
 	/**
@@ -217,8 +215,6 @@ public class Level extends LevelParser {
 			}
 		}
 	}
-	
-
 
 	/**
 	 * Create Zobrist hash random strings.
@@ -306,7 +302,7 @@ public class Level extends LevelParser {
 	private void calculateTwinsCapacitors() {
 		// TODO
 	}
-	
+
 	/**
 	 * This method is used to dinamically add new capacitors.
 	 * 
@@ -314,8 +310,9 @@ public class Level extends LevelParser {
 	 */
 	public void addNewCapacitor(List<Integer> boxesAsWalls, int targets) {
 		// TODO Auto-generated method stub
+		logger.info("New Capacitor :)");
 		Capacitor cap = new Capacitor(boxesAsWalls.size() - targets - 1);
-		for (Integer Box : boxesAsWalls){
+		for (Integer Box : boxesAsWalls) {
 			int box = Box;
 			this.getCapacitorsByPos(box >> 16, box & 0xFFFF).add(cap);
 		}

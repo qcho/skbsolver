@@ -22,44 +22,44 @@ public class LevelParser {
 
 	public int[][] playerZobrist;
 	public int[][] boxZobrist;
-	
+
 	public List<Integer> boxesBuffer;
 	public List<Integer> playerBuffer;
-	
+
 	public LevelParser(File level) {
 		xsize = 0;
-		
+
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(level));
-			
+
 			List<String> lines = new LinkedList<String>();
 			boxesBuffer = new LinkedList<Integer>();
 			playerBuffer = new LinkedList<Integer>();
-			
+
 			String str;
 
 			while ((str = in.readLine()) != null) {
 				lines.add(processLine(boxesBuffer, playerBuffer, xsize, str));
-				
+
 				xsize++;
 				ysize = Math.max(ysize, str.length());
 			}
-			
+
 			map = new char[xsize][ysize];
 			int j = 0;
-			
-			for (String line : lines){
+
+			for (String line : lines) {
 				char[] myLine = new char[ysize];
 				int i;
-				for(i = 0; i < line.length(); i++){
+				for (i = 0; i < line.length(); i++) {
 					myLine[i] = line.charAt(i);
 				}
-				for(; i < ysize; i++){
+				for (; i < ysize; i++) {
 					myLine[i] = ' ';
 				}
 				map[j++] = myLine;
 			}
-			
+
 			in.close();
 		} catch (IOException e) {
 			logger.error("Error parsing level", e);
@@ -67,42 +67,43 @@ public class LevelParser {
 
 	}
 
-	private String processLine(List<Integer> boxesBuffer, List<Integer> playerBuffer, int x, String line) {
+	private String processLine(List<Integer> boxesBuffer,
+			List<Integer> playerBuffer, int x, String line) {
 		StringBuffer myLine = new StringBuffer();
-		
+
 		int y = 0;
 		for (char c : line.toCharArray()) {
-			
+
 			switch (c) {
-				case '#':
-					myLine.append('#');
-					break;
-				case '@':
-					myLine.append(' ');
-					playerBuffer.add(((x & 0xFFFF) << 16) | (y & 0xFFFF));
-					break;
-				case '+':
-					myLine.append('.');
-					playerBuffer.add(((x & 0xFFFF) << 16) | (y & 0xFFFF));
-					break;
-				case '$':
-					myLine.append(' ');
-					boxesBuffer.add(((x & 0xFFFF) << 16) | (y & 0xFFFF));
-					break;
-				case '*':
-					myLine.append('.');
-					boxesBuffer.add(((x & 0xFFFF) << 16) | (y & 0xFFFF));
-					break;
-				case '.':
-					myLine.append('.');
-					break;
-				case ' ':
-					myLine.append(' ');
-					break;
-				default:
-					break;
+			case '#':
+				myLine.append('#');
+				break;
+			case '@':
+				myLine.append(' ');
+				playerBuffer.add(((x & 0xFFFF) << 16) | (y & 0xFFFF));
+				break;
+			case '+':
+				myLine.append('.');
+				playerBuffer.add(((x & 0xFFFF) << 16) | (y & 0xFFFF));
+				break;
+			case '$':
+				myLine.append(' ');
+				boxesBuffer.add(((x & 0xFFFF) << 16) | (y & 0xFFFF));
+				break;
+			case '*':
+				myLine.append('.');
+				boxesBuffer.add(((x & 0xFFFF) << 16) | (y & 0xFFFF));
+				break;
+			case '.':
+				myLine.append('.');
+				break;
+			case ' ':
+				myLine.append(' ');
+				break;
+			default:
+				break;
 			}
-			
+
 			y++;
 		}
 
