@@ -1,7 +1,7 @@
 package edu.itba.skbsolver;
 
-import java.util.Map;
 import java.util.EnumMap;
+import java.util.Map;
 
 public enum Token {
 	WALL('#'), PLAYER('@'), PLAYERTARGET('+'), BOX('$'), BOXTARGET('*'), TARGET(

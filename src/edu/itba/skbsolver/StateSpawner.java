@@ -116,10 +116,24 @@ public class StateSpawner {
 						// This is kind of a easy check, let's do this before
 						// the freeze deadlock
 						if (noDeadlock) {
+							for (Capacitor cap : level.getCapacitorsByPos(rx, ry)){
+								try{
+									cap.countMinus();
+								} catch (TileSetCapacityExceeded e){
+									level.logger.error("This should never happen.");
+								}
+							}
 							for (Capacitor cap : level.getCapacitorsByPos(tx,
 									ty)) {
 								if (!cap.canIstepInto()) {
 									noDeadlock = false;
+								}
+							}
+							for (Capacitor cap : level.getCapacitorsByPos(rx, ry)){
+								try{
+									cap.countPlus();
+								} catch (TileSetCapacityExceeded e){
+									level.logger.error("This should never happen.");
 								}
 							}
 						}
