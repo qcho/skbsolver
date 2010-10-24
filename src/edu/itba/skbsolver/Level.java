@@ -243,7 +243,7 @@ public class Level extends LevelParser {
 	 * different States)
 	 */
 	private void createZobristKeys() {
-		Random randGen = new Random(xsize + ysize);
+		Random randGen = new Random(42 + xsize + ysize);
 		playerZobrist = new int[xsize][ysize];
 		boxZobrist = new int[xsize][ysize];
 		for (int i = 0; i < xsize; i++) {

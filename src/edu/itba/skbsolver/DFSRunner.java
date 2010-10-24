@@ -14,7 +14,7 @@ public class DFSRunner {
 		stack.addFirst(level.getInitialState());
 
 		while (!stack.isEmpty()) {
-			State s = stack.removeFirst();
+			State s = stack.removeLast();
 			List<State> newStates = stateSpawner.childs(s);
 
 			// TODO: reorder states with a Heuristic
@@ -25,7 +25,7 @@ public class DFSRunner {
 					level.logger.info("Found a solution: \n" + n.toString());
 				}
 				if (winner == null || n.moves < winner.moves) {
-					stack.addFirst(n);
+					stack.addLast(n);
 				}
 			}
 		}

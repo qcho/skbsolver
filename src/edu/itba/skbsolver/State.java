@@ -64,12 +64,16 @@ public class State implements Comparable<State> {
 
 		/*
 		 * Este código mantiene ordenado el arreglo
-		 * 
-		 * while (boxMoved > 0 && this.boxes[boxMoved-1] >
-		 * this.boxes[boxMoved]){ swap(boxMoved, boxMoved - 1); boxMoved--; }
-		 * while (boxMoved + 1 < this.boxes.length && this.boxes[boxMoved] >
-		 * this.boxes[boxMoved+1]){ swap(boxMoved, boxMoved + 1); boxMoved++; }
 		 */
+	    while (boxMoved > 0 && this.boxes[boxMoved-1] > this.boxes[boxMoved]){
+ 		    swap(boxMoved, boxMoved - 1);
+ 		    boxMoved--;
+        }
+		while (boxMoved + 1 < this.boxes.length && this.boxes[boxMoved] > this.boxes[boxMoved+1]){
+			swap(boxMoved, boxMoved + 1);
+			boxMoved++;
+		}
+		 
 
 		this.hashCalculated = newHash;
 	}
@@ -122,16 +126,14 @@ public class State implements Comparable<State> {
 		return new Point(px(), py());
 	}
 
-	/**
-	 * We are considering that two states are equal iff they have the same
-	 * Zobrist hash. This may not be true!!! but is very likely (if it's
-	 * completely random, the chances are 1/4 billion)
-	 * 
+	/** 
 	 * @param other
 	 * @return
 	 */
 	public boolean equals(State other) {
-		return this.hashCalculated == other.hashCalculated;
+		return this.hashCalculated == other.hashCalculated
+			&& player == other.player
+			&& moves == other.moves;
 	}
 
 	/**
