@@ -210,23 +210,22 @@ public class State implements Comparable<State> {
 		boxes[boxMoved] += ((dx[d] << 16) + dy[d]);
 		boolean result = _freezeCheck(boxesAsWalls, boxes[boxMoved], 0);
 		boxes[boxMoved] -= ((dx[d] << 16) + dy[d]);
-		
+
 		return result;
 	}
 
 	private boolean _freezeCheck(List<Integer> boxesAsWalls, int box,
 			int targets) {
 		for (Integer wall : boxesAsWalls) {
-			if (wall == box){
+			if (wall == box) {
 				return false;
 			}
 		}
-		
+
 		int bx = box >> 16;
 		int by = box & 0xFFFF;
 
 		map.logger.info("Checking freeze in " + bx + "," + by);
-		
 
 		targets += map.get(bx, by) == '.' ? 1 : 0;
 
