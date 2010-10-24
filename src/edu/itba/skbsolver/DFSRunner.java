@@ -4,10 +4,8 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
-import edu.itba.skbsolver.dot.DotPrinter;
-
 public class DFSRunner {
-	public static Solution run(Level level, DotPrinter dotPrinter) {
+	public static Solution run(Level level, boolean tree) {
 		Deque<State> stack = new LinkedList<State>();
 		PositionsTable posTable = new PositionsTable();
 		StateSpawner stateSpawner = new StateSpawner(posTable, level);

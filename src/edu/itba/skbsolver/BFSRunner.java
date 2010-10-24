@@ -3,10 +3,8 @@ package edu.itba.skbsolver;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import edu.itba.skbsolver.dot.DotPrinter;
-
 public class BFSRunner {
-	public static Solution run(Level level, DotPrinter dotPrinter) {
+	public static Solution run(Level level, boolean tree) {
 		PriorityQueue<State> queue = new PriorityQueue<State>();
 		PositionsTable posTable = new PositionsTable();
 		StateSpawner stateSpawner = new StateSpawner(posTable, level);
@@ -22,11 +20,6 @@ public class BFSRunner {
 			// TODO: reorder states with a Heuristic
 
 			for (State n : newStates) {
-				
-				if(dotPrinter != null){
-					dotPrinter.addState(n);
-				}
-				
 				if (level.playerWin(n)) {
 					winner = n;
 					queue.clear();
