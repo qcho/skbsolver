@@ -27,6 +27,6 @@ public class Capacitor {
 	}
 
 	public boolean canIstepInto() {
-		return this.amount + 1 != this.capacity;
+		return this.amount < this.capacity;
 	}
 }
