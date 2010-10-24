@@ -9,7 +9,6 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.itba.skbsolver.Level;
 import edu.itba.skbsolver.State;
 
 public class DotPrinter {
@@ -73,13 +72,14 @@ public class DotPrinter {
 	
 	public void addState(State s){
 		try {
-			String parent = Integer.toHexString(s.parent.hashCode());
-			String current = Integer.toHexString(s.hashCode());
+			//Added "s" in order to prevent 0-9 starting hashes.
+			String parent = "s" + Integer.toHexString(s.parent.hashCode());
+			String current = "s" + Integer.toHexString(s.hashCode());
 			
 			// Start writing to the output stream
-			this.writter.append(current + " [label=\"" + s.toString().replace("\n", "\\n") + "\"]");
+			this.writter.append(current + " [label=\"" + s.toString().replace("\n", "\\n") + "\"];");
 			this.writter.newLine();
-			this.writter.append(parent + " -- " + current);
+			this.writter.append(parent + " -- " + current + ";");
 			this.writter.newLine();
 			this.writter.newLine();
 			
