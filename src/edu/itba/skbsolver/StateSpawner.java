@@ -152,6 +152,14 @@ public class StateSpawner {
 								// :D
 
 								// TODO: Other deadlock???
+								
+								// TODO: Another thing we have to do is push a
+								// box while we can, if the box is in a 
+								// closed hallway.. example:
+								//  ###############
+								//   @$
+								//  ###### ########
+								// Here, we should push the box always.
 
 								newStates.add(newState);
 
