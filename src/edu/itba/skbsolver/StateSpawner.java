@@ -1,5 +1,6 @@
 package edu.itba.skbsolver;
 
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class StateSpawner {
 	public List<State> childs(State s) {
 		level.logger.info("Listing childs for state: \n"+s.toString());
 		
-		List<State> newStates = new LinkedList<State>();
+		List<State> newStates = new ArrayList<State>();
 		Deque<Integer> queue = new LinkedList<Integer>();
 		Deque<Integer> how = new LinkedList<Integer>();
 		int[][][] distance = new int[level.xsize][level.ysize][4];
@@ -109,6 +110,14 @@ public class StateSpawner {
 						int newHash = s.hashIfMove(d, boxMoved);
 
 						if (posTable.has(newHash)) {
+							State st = posTable.get(newHash);
+							
+							if (st.moves > s.moves + distance[px][py][h]+1){
+								st.moves = s.moves + distance[px][py][h]+1;
+								st.parent = s;
+								newStates.add(st);
+							}
+							
 							noDeadlock = false;
 						}
 
@@ -140,11 +149,11 @@ public class StateSpawner {
 						if (noDeadlock) {
 							if (!s.triggersFreezeDeadlock(boxMoved, d)) {
 
-								posTable.add(newHash);
-
 								State newState = new State(s, boxMoved, d,
 										distance[px][py][h]+1, newHash);
 
+								posTable.add(newHash, newState);
+								
 								// TODO: Bipartite deadlock?
 								// I think bipartite deadlocks should be checked
 								// only if we just inserted a box into a target
@@ -155,9 +164,11 @@ public class StateSpawner {
 								// box while we can, if the box is in a 
 								// closed hallway.. example:
 								//  ###############
-								//   @$
+								//   @$    A
 								//  ###### ########
 								// Here, we should push the box always.
+								// At least until A (we may want just 
+								// clear the hallway and pass... dunno) 
 
 								newStates.add(newState);
 

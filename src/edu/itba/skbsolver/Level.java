@@ -28,6 +28,8 @@ public class Level extends LevelParser {
 
 	// This should be List<Capacitor>[][] but Java doesn't allow it
 	private Object[][] capacitorMap;
+	
+	private PositionsTable capacitorTable;
 
 	// This map returns what tiles are "step-able" by boxes without triggering
 	// a simple deadlock. Example: a box trapped in a corner
@@ -47,6 +49,8 @@ public class Level extends LevelParser {
 	 */
 	Level(File file) {
 		super(file);
+		
+		capacitorTable = new PositionsTable();
 
 		int[] initialBoxes = new int[boxesBuffer.size()];
 		int j = 0;
@@ -334,12 +338,23 @@ public class Level extends LevelParser {
 	 */
 	public void addNewCapacitor(List<Integer> boxesAsWalls, int targets) {
 		// TODO Auto-generated method stub
-		logger.info("New Capacitor :). It's capacity is " + (boxesAsWalls.size() + targets - 1));
-		Capacitor cap = new Capacitor(boxesAsWalls.size() - 1 + targets);
-		capacitors.add(cap);
-		for (Integer Box : boxesAsWalls) {
-			int box = Box;
-			this.getCapacitorsByPos(box >> 16, box & 0xFFFF).add(cap);
+		if (boxesAsWalls.size() != targets){
+			int hash = 0;
+			for (Integer Box : boxesAsWalls) {
+				hash ^= boxZobrist[Box>>16][Box & 0xFFFF];
+			}
+			if (!capacitorTable.has(hash)){
+				logger.info("New Capacitor :). It's capacity is " + (boxesAsWalls.size() - 1));
+				Capacitor cap = new Capacitor(boxesAsWalls.size() - 1);
+				
+				for (Integer Box : boxesAsWalls) {
+					int box = Box;
+					this.getCapacitorsByPos(box >> 16, box & 0xFFFF).add(cap);
+				}
+				capacitors.add(cap);
+				capacitorTable.add(hash, new State());
+			}
+			
 		}
 	}
 }

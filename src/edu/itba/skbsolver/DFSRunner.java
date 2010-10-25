@@ -1,5 +1,7 @@
 package edu.itba.skbsolver;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,7 +21,7 @@ public class DFSRunner {
 			State s = stack.removeLast();
 			List<State> newStates = stateSpawner.childs(s);
 
-			// TODO: reorder states with a Heuristic
+			sort((ArrayList<State>) newStates, new CompareState());
 
 			for (State n : newStates) {
 				if (level.playerWin(n)) {
@@ -34,4 +36,11 @@ public class DFSRunner {
 
 		return new Solution(winner);
 	}
+
+	private static class CompareState implements Comparator<State> {
+		public int compare(State a, State b){
+			return -((a.moves - b.moves) + (a.moves - a.parent.moves - b.moves + b.parent.moves));
+		}
+	}
+
 }

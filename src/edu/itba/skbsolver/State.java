@@ -23,6 +23,7 @@ public class State implements Comparable<State> {
 	public int hashCalculated = 0;
 	public State parent = null;
 	public Level map;
+	public int heuristicDistance = 0;
 
 	/**
 	 * Create a Snap from:
@@ -42,6 +43,7 @@ public class State implements Comparable<State> {
 		this.hashCalculated = map.playerZobrist[player >> 16][player & 0xFFFF];
 		for (int i = 0; i < boxes.length; i++) {
 			hashCalculated ^= map.boxZobrist[boxes[i] >> 16][boxes[i] & 0xFFFF];
+			heuristicDistance += map.heuristicDistance[boxes[i] >> 16][boxes[i] & 0xFFFF];
 		}
 	}
 
@@ -61,6 +63,9 @@ public class State implements Comparable<State> {
 		this.player = s.boxes[boxMoved];
 
 		this.boxes[boxMoved] += (dx[direction] << 16) + dy[direction];
+		this.heuristicDistance += 
+			map.heuristicDistance[boxes[boxMoved]>>16][boxes[boxMoved]&0xFFFF]
+			-map.heuristicDistance[player>>16][player&0xFFFF];
 
 		/*
 		 * Este código mantiene ordenado el arreglo
@@ -76,6 +81,10 @@ public class State implements Comparable<State> {
 		 
 
 		this.hashCalculated = newHash;
+	}
+
+	public State() {
+		// TODO Auto-generated constructor stub
 	}
 
 	@SuppressWarnings("unused")
@@ -145,11 +154,12 @@ public class State implements Comparable<State> {
 
 	/**
 	 * A comparison between states. This is required to push states into a
-	 * priority queue.
+	 * priority queue. Since that's the only part we use it, we reverse the
+	 * comparison to give less priority with high amount of moves.
 	 */
 	public int compareTo(State b) {
 		if (moves == b.moves) {
-			return player - b.player;
+			return b.player - player;
 		}
 		return moves - b.moves;
 	}
