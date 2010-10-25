@@ -148,8 +148,7 @@ public class StateSpawner {
 						}
 
 						if (noDeadlock) {
-							if (level.getCapacitorsByPos(tx, ty).size() < 2 ||
-									!s.triggersFreezeDeadlock(boxMoved, d)) {
+							if (review || !s.triggersFreezeDeadlock(boxMoved, d)) {
 
 								State newState = new State(s, boxMoved, d,
 										distance[px][py][h]+1, newHash);
