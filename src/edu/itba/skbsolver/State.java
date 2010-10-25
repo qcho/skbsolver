@@ -233,6 +233,7 @@ public class State implements Comparable<State> {
 	private boolean _freezeCheck(Deque<Integer> boxesAsWalls, int box,
 			int targets) {
 
+		// TODO: optimizar esto
 		int bx = box >> 16;
 		int by = box & 0xFFFF;
 
