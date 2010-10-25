@@ -1,6 +1,7 @@
 package edu.itba.skbsolver;
 
 import java.awt.Point;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -196,7 +197,6 @@ public class State implements Comparable<State> {
 
 	public String toString() {
 		StringBuilder s = new StringBuilder();
-//		s.append(Integer.toHexString(hashCalculated) + "\n");
 
 		Map<Point, Character> m = new HashMap<Point, Character>();
 
@@ -223,8 +223,7 @@ public class State implements Comparable<State> {
 	}
 
 	public boolean triggersFreezeDeadlock(int boxMoved, int d) {
-		List<Integer> boxesAsWalls = new LinkedList<Integer>();
-		map.logger.info("Checking for a Freeze Deadlock:");
+		Deque<Integer> boxesAsWalls = new LinkedList<Integer>();
 
 		boxes[boxMoved] += ((dx[d] << 16) + dy[d]);
 		boolean result = _freezeCheck(boxesAsWalls, boxes[boxMoved], 0);
@@ -233,13 +232,11 @@ public class State implements Comparable<State> {
 		return result;
 	}
 
-	private boolean _freezeCheck(List<Integer> boxesAsWalls, int box,
+	private boolean _freezeCheck(Deque<Integer> boxesAsWalls, int box,
 			int targets) {
 
 		int bx = box >> 16;
 		int by = box & 0xFFFF;
-
-		map.logger.info("    Checking freeze in " + bx + "," + by);
 
 		targets += map.get(bx, by) == '.' ? 1 : 0;
 
@@ -281,22 +278,22 @@ public class State implements Comparable<State> {
 		if (verticalBlocked) {
 			for (int abox : boxes) {
 				if (abox == box + 1 || abox == box - 1) {
-					boxesAsWalls.add(box);
+					boxesAsWalls.addLast(box);
 					if (_freezeCheck(boxesAsWalls, abox, targets)) {
 						return true;
 					}
-					boxesAsWalls.remove(boxesAsWalls.size() - 1);
+					boxesAsWalls.removeLast();
 				}
 			}
 		}
 		if (horizontalBlocked) {
 			for (int abox : boxes) {
 				if (abox == box + (1 << 16) || abox == box - (1 << 16)) {
-					boxesAsWalls.add(box);
+					boxesAsWalls.addLast(box);
 					if (_freezeCheck(boxesAsWalls, abox, targets)) {
 						return true;
 					}
-					boxesAsWalls.remove(boxesAsWalls.size() - 1);
+					boxesAsWalls.removeLast();
 				}
 			}
 		}

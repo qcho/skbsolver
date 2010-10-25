@@ -58,7 +58,8 @@ public class Main {
 			} else {
 				System.out.println("No solution found.");
 			}
-
+			System.out.println(level.BADCAPACITORS);
+			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			System.out.println(USAGE_HELP);

@@ -15,17 +15,11 @@ public class Capacitor {
 		this.amount = 0;
 	}
 
-	public void countPlus() throws TileSetCapacityExceeded {
-		if (this.amount == this.capacity) {
-			throw new TileSetCapacityExceeded();
-		}
+	public void countPlus() {
 		this.amount++;
 	}
 
-	public void countMinus() throws TileSetCapacityExceeded {
-		if (this.amount == 0) {
-			throw new TileSetCapacityExceeded();
-		}
+	public void countMinus() {
 		this.amount--;
 	}
 
@@ -35,5 +29,9 @@ public class Capacitor {
 
 	public boolean canIstepInto() {
 		return this.amount < this.capacity;
+	}
+
+	public boolean isEmpty() {
+		return this.amount == 0;
 	}
 }

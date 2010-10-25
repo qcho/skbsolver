@@ -80,7 +80,7 @@ public class Solution {
 		px = current.player >> 16;
 		py = current.player & 0xFFFF;
 
-		char[] how = { 'l', 'u', 'r', 'd' };
+		char[] how = { 'r', 'd', 'l', 'u' };
 
 		while (px != rx || py != ry) {
 			sol.append(how[lug[rx][ry]]);

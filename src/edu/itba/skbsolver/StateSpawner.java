@@ -45,17 +45,16 @@ public class StateSpawner {
 		for (Capacitor cap : level.getCapacitors()) {
 			cap.reset();
 		}
-		try {
-			for (int i = 0; i < s.boxes.length; i++) {
-				boxIndex[s.boxes[i] >> 16][s.boxes[i] & 0xFFFF] = i;
-				for (Capacitor cap : level.getCapacitorsByPos(s.boxes[i] >> 16,
-						s.boxes[i] & 0xFFFF)) {
-					cap.countPlus();
+		for (int i = 0; i < s.boxes.length; i++) {
+			boxIndex[s.boxes[i] >> 16][s.boxes[i] & 0xFFFF] = i;
+			for (Capacitor cap : level.getCapacitorsByPos(s.boxes[i] >> 16,
+					s.boxes[i] & 0xFFFF)) {
+				if (!cap.canIstepInto()){
+					level.logger.info("But happened!");
+					return new LinkedList<State>();	
 				}
+				cap.countPlus();
 			}
-		} catch (TileSetCapacityExceeded tS) { // This should not happen :)
-			level.logger.info("But happened!");
-			return new LinkedList<State>();
 		}
 
 		// Put first element on queue
@@ -68,10 +67,12 @@ public class StateSpawner {
 
 		// BFS for pushes
 		while (!queue.isEmpty()) {
+			
 			p = queue.removeFirst();
 			h = how.removeFirst();
 			px = p >> 16;
 			py = p & 0xFFFF;
+			
 			for (int d = 0; d < 4; d++) {
 				rx = px + dx[d];
 				ry = py + dy[d];
@@ -126,11 +127,10 @@ public class StateSpawner {
 						// Si no dispara un Capacitor Deadlock
 						if (noDeadlock) {
 							for (Capacitor cap : level.getCapacitorsByPos(rx, ry)){
-								try{
+								if (!cap.isEmpty()){
 									cap.countMinus();
-								} catch (TileSetCapacityExceeded e){
-									level.logger.error("This should never happen. " +
-										"Removing boxes from a capacitor not full.");
+								} else {
+									noDeadlock = false;
 								}
 							}
 							for (Capacitor cap : level.getCapacitorsByPos(tx, ty)) {
@@ -139,38 +139,22 @@ public class StateSpawner {
 								}
 							}
 							for (Capacitor cap : level.getCapacitorsByPos(rx, ry)){
-								try{
+								if (!cap.isFull()){
 									cap.countPlus();
-								} catch (TileSetCapacityExceeded e){
-									level.logger.error("This should never happen. " +
-								        "A Capacitor has been triggered.");
+								} else {
+									noDeadlock = false;
 								}
 							}
 						}
 
 						if (noDeadlock) {
-							if (!s.triggersFreezeDeadlock(boxMoved, d)) {
+							if (level.getCapacitorsByPos(tx, ty).size() < 2 ||
+									!s.triggersFreezeDeadlock(boxMoved, d)) {
 
 								State newState = new State(s, boxMoved, d,
 										distance[px][py][h]+1, newHash);
 
 								posTable.add(newHash, newState);
-								
-								// TODO: Bipartite deadlock?
-								// I think bipartite deadlocks should be checked
-								// only if we just inserted a box into a target
-
-								// TODO: Other deadlock???
-								
-								// TODO: Another thing we have to do is push a
-								// box while we can, if the box is in a 
-								// closed hallway.. example:
-								//  ###############
-								//   @$    A
-								//  ###### ########
-								// Here, we should push the box always.
-								// At least until A (we may want just 
-								// clear the hallway and pass... dunno) 
 
 								newStates.add(newState);
 
