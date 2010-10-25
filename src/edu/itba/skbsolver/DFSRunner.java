@@ -19,9 +19,9 @@ public class DFSRunner {
 
 		while (!stack.isEmpty()) {
 			State s = stack.removeLast();
-			List<State> newStates = stateSpawner.childs(s);
+			List<State> newStates = stateSpawner.childs(s, false);
 
-			sort((ArrayList<State>) newStates, new CompareState());
+			//sort((ArrayList<State>) newStates, new CompareState());
 
 			for (State n : newStates) {
 				if (level.playerWin(n)) {
@@ -33,7 +33,30 @@ public class DFSRunner {
 				}
 			}
 		}
-
+		
+		if (winner != null){
+			posTable = new PositionsTable();
+			stateSpawner = new StateSpawner(posTable, level);
+			stack.addFirst(level.getInitialState());
+			
+			while (!stack.isEmpty()) {
+				State s = stack.removeLast();
+				List<State> newStates = stateSpawner.childs(s, true);
+	
+				//sort((ArrayList<State>) newStates, new CompareState());
+	
+				for (State n : newStates) {
+					if (level.playerWin(n)) {
+						winner = n;
+						level.logger.info("Found a solution: \n" + n.toString());
+					}
+					if (winner == null || n.moves < winner.moves) {
+						stack.addLast(n);
+					}
+				}
+			}
+		}
+		
 		return new Solution(winner);
 	}
 

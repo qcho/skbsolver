@@ -23,7 +23,7 @@ public class BFSRunner {
 				break;
 			}
 				
-			List<State> newStates = stateSpawner.childs(s);
+			List<State> newStates = stateSpawner.childs(s, true);
 
 			// TODO: reorder states with a Heuristic
 

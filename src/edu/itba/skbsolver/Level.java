@@ -230,6 +230,7 @@ public class Level extends LevelParser {
 				}
 			}
 		}
+		initial.heuristicDist();
 	}
 
 	/**

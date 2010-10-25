@@ -20,7 +20,7 @@ public class StateSpawner {
 		this.level = level;
 	}
 
-	public List<State> childs(State s) {
+	public List<State> childs(State s, boolean review) {
 		level.logger.info("Listing childs for state: \n"+s.toString());
 		
 		List<State> newStates = new ArrayList<State>();
@@ -110,12 +110,14 @@ public class StateSpawner {
 						int newHash = s.hashIfMove(d, boxMoved);
 
 						if (posTable.has(newHash)) {
-							State st = posTable.get(newHash);
-							
-							if (st.moves > s.moves + distance[px][py][h]+1){
-								st.moves = s.moves + distance[px][py][h]+1;
-								st.parent = s;
-								newStates.add(st);
+							if (review){
+								State st = posTable.get(newHash);
+								
+								if (st.moves > s.moves + distance[px][py][h]+1){
+									st.moves = s.moves + distance[px][py][h]+1;
+									st.parent = s;
+									newStates.add(st);
+								}
 							}
 							
 							noDeadlock = false;

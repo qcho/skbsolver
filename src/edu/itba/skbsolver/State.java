@@ -43,6 +43,15 @@ public class State implements Comparable<State> {
 		this.hashCalculated = map.playerZobrist[player >> 16][player & 0xFFFF];
 		for (int i = 0; i < boxes.length; i++) {
 			hashCalculated ^= map.boxZobrist[boxes[i] >> 16][boxes[i] & 0xFFFF];
+		}
+	}
+	
+	/**
+	 * Calculate each box's distance to nearest target
+	 */
+	void heuristicDist(){
+		heuristicDistance = 0;
+		for (int i = 0; i < boxes.length; i++) {
 			heuristicDistance += map.heuristicDistance[boxes[i] >> 16][boxes[i] & 0xFFFF];
 		}
 	}
