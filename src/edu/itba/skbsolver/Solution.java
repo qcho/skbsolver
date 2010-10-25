@@ -4,7 +4,11 @@ import java.awt.Point;
 import java.util.Deque;
 import java.util.LinkedList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Solution {
+	final static Logger logger = LoggerFactory.getLogger(Solution.class);
 
 	public static final int[] dx = { 0, 1, 0, -1 };
 	public static final int[] dy = { 1, 0, -1, 0 };
@@ -21,7 +25,7 @@ public class Solution {
 
 			states.addFirst(winner);
 
-			winner.map.logger.info("The solution is: \n" + winner.toString());
+			logger.info("The solution is: \n" + winner.toString());
 			
 			while (winner.parent != null) {
 				State current = winner.parent;

@@ -5,7 +5,8 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
-import edu.itba.skbsolver.exception.TileSetCapacityExceeded;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StateSpawner {
 
@@ -15,31 +16,32 @@ public class StateSpawner {
 	private PositionsTable posTable;
 	private Level level;
 
+	final static Logger logger = LoggerFactory.getLogger(StateSpawner.class);
+	
 	public StateSpawner(PositionsTable posTable, Level level) {
 		this.posTable = posTable;
 		this.level = level;
+		
+		
 	}
 
 	public List<State> childs(State s, boolean review) {
-		level.logger.info("Listing childs for state: \n"+s.toString());
+		logger.info("Listing childs for state: \n"+s.toString());
 		
 		List<State> newStates = new ArrayList<State>();
 		Deque<Integer> queue = new LinkedList<Integer>();
-		Deque<Integer> how = new LinkedList<Integer>();
-		int[][][] distance = new int[level.xsize][level.ysize][4];
+		
+		int[][] distance = new int[level.xsize][level.ysize];
 		int[][] boxIndex = new int[level.xsize][level.ysize];
 
-		int px, py, rx, ry, tx, ty, h, p, r, boxMoved;
+		int px, py, rx, ry, tx, ty, p, boxMoved;
 		boolean noDeadlock;
 
 		// Initialize auxiliar vectors
 		for (int i = 0; i < level.xsize; i++) {
 			for (int j = 0; j < level.ysize; j++) {
+				distance[i][j] = -1;
 				boxIndex[i][j] = -1;
-				distance[i][j][0] = -1;
-				distance[i][j][1] = -1;
-				distance[i][j][2] = -1;
-				distance[i][j][3] = -1;
 			}
 		}
 		for (Capacitor cap : level.getCapacitors()) {
@@ -50,7 +52,7 @@ public class StateSpawner {
 			for (Capacitor cap : level.getCapacitorsByPos(s.boxes[i] >> 16,
 					s.boxes[i] & 0xFFFF)) {
 				if (!cap.canIstepInto()){
-					level.logger.info("But happened!");
+					logger.info("But happened!");
 					return new LinkedList<State>();	
 				}
 				cap.countPlus();
@@ -59,17 +61,12 @@ public class StateSpawner {
 
 		// Put first element on queue
 		queue.addLast(s.player);
-		how.addLast(0);
-		distance[s.px()][s.py()][0] = 0;
-		distance[s.px()][s.py()][1] = 0;
-		distance[s.px()][s.py()][2] = 0;
-		distance[s.px()][s.py()][3] = 0;
+		distance[s.px()][s.py()] = 0;
 
 		// BFS for pushes
 		while (!queue.isEmpty()) {
 			
 			p = queue.removeFirst();
-			h = how.removeFirst();
 			px = p >> 16;
 			py = p & 0xFFFF;
 			
@@ -80,7 +77,7 @@ public class StateSpawner {
 				tx = rx + dx[d];
 				ty = ry + dy[d];
 
-				if (distance[rx][ry][d] == -1 && // Si no visité este tile, y
+				if (distance[rx][ry] == -1 && // Si no visité este tile, y
 												// además:
 
 						level.get(rx, ry) != '#' && // si no hay una pared,
@@ -103,9 +100,6 @@ public class StateSpawner {
 
 					boxMoved = boxIndex[rx][ry];
 
-					// Add the new position to the queue
-					distance[rx][ry][d] = distance[px][py][h] + 1;
-
 					if (boxMoved != -1) {
 
 						int newHash = s.hashIfMove(d, boxMoved);
@@ -114,8 +108,8 @@ public class StateSpawner {
 							if (review){
 								State st = posTable.get(newHash);
 								
-								if (st.moves > s.moves + distance[px][py][h]+1){
-									st.moves = s.moves + distance[px][py][h]+1;
+								if (st.moves > s.moves + distance[px][py]+1){
+									st.moves = s.moves + distance[px][py]+1;
 									st.parent = s;
 									newStates.add(st);
 								}
@@ -151,7 +145,7 @@ public class StateSpawner {
 							if (review || !s.triggersFreezeDeadlock(boxMoved, d)) {
 
 								State newState = new State(s, boxMoved, d,
-										distance[px][py][h]+1, newHash);
+										distance[px][py]+1, newHash);
 
 								posTable.add(newHash, newState);
 
@@ -161,14 +155,16 @@ public class StateSpawner {
 						}
 					} else {
 						// Lo agrego a la cola
+
+						distance[rx][ry] = distance[px][py] + 1;
+						
 						queue.addLast((rx << 16) + ry);
-						how.addLast(d);
 					}
 				}
 			}
 		}
 			
-		level.logger.info("Found " + newStates.size() + " childs.");
+		logger.info("Found " + newStates.size() + " childs.");
 		return newStates;
 	}
 

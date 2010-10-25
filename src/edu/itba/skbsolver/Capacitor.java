@@ -1,7 +1,5 @@
 package edu.itba.skbsolver;
 
-import edu.itba.skbsolver.exception.TileSetCapacityExceeded;
-
 public class Capacitor {
 	private int capacity;
 	private int amount;

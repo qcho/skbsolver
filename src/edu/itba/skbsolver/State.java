@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -97,7 +96,6 @@ public class State implements Comparable<State> {
 		// TODO Auto-generated constructor stub
 	}
 
-	@SuppressWarnings("unused")
 	private void swap(int i, int j) {
 		int c = this.boxes[i];
 		this.boxes[i] = this.boxes[j];
