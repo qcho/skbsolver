@@ -1,6 +1,6 @@
 package edu.itba.skbsolver;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -20,8 +20,6 @@ public class DFSRunner {
 		while (!stack.isEmpty()) {
 			State s = stack.removeLast();
 			List<State> newStates = stateSpawner.childs(s, false);
-
-			//sort((ArrayList<State>) newStates, new CompareState());
 
 			for (State n : newStates) {
 				if (level.playerWin(n)) {
@@ -43,7 +41,7 @@ public class DFSRunner {
 				State s = stack.removeLast();
 				List<State> newStates = stateSpawner.childs(s, true);
 	
-				//sort((ArrayList<State>) newStates, new CompareState());
+				Collections.sort(newStates, new CompareState());
 	
 				for (State n : newStates) {
 					if (level.playerWin(n)) {
