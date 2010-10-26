@@ -42,10 +42,22 @@ public class DFSRunner {
 			
 			while (!stack.isEmpty()) {
 				State s = stack.removeLast();
+				
+				if(dotPrinter != null){
+					dotPrinter.addState(s);
+				}
+				
 				List<State> newStates = stateSpawner.childs(s, true);
 	
 				Collections.sort(newStates, new CompareState());
-	
+
+				if(dotPrinter != null){
+					dotPrinter.addAnnotation(s, "#62B1D0", "Cutting "+stateSpawner.countDeadlocks+" deadlocks.");
+					dotPrinter.addAnnotation(s, "#FF8B73", "Cutting "+stateSpawner.countCapacity+" capacity deadlocks.");
+					dotPrinter.addAnnotation(s, "#FFC640", "Revisiting "+stateSpawner.countRevisited+" childs.");
+					dotPrinter.addAnnotation(s, "#6EE768", "New "+stateSpawner.countNewFreeze+" capacitors.");
+				}
+				
 				for (State n : newStates) {
 					if (level.playerWin(n)) {
 						winner = n;

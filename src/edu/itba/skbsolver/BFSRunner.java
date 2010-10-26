@@ -29,7 +29,12 @@ public class BFSRunner {
 				
 			List<State> newStates = stateSpawner.childs(s, true);
 
-			// TODO: reorder states with a Heuristic
+			if(dotPrinter != null){
+				dotPrinter.addAnnotation(s, "#62B1D0", "Cutting "+stateSpawner.countDeadlocks+" deadlocks.");
+				dotPrinter.addAnnotation(s, "#FF8B73", "Cutting "+stateSpawner.countCapacity+" capacity deadlocks.");
+				dotPrinter.addAnnotation(s, "#FFC640", "Revisiting "+stateSpawner.countRevisited+" childs.");
+				dotPrinter.addAnnotation(s, "#6EE768", "New "+stateSpawner.countNewFreeze+" capacitors.");
+			}
 
 			for (State n : newStates) {
 				queue.add(n);
