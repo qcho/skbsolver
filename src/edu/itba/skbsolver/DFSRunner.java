@@ -52,10 +52,12 @@ public class DFSRunner {
 				Collections.sort(newStates, new CompareState());
 
 				if(dotPrinter != null){
-					dotPrinter.addAnnotation(s, "#62B1D0", "Cutting "+stateSpawner.countDeadlocks+" deadlocks.");
-					dotPrinter.addAnnotation(s, "#FF8B73", "Cutting "+stateSpawner.countCapacity+" capacity deadlocks.");
-					dotPrinter.addAnnotation(s, "#FFC640", "Revisiting "+stateSpawner.countRevisited+" childs.");
-					dotPrinter.addAnnotation(s, "#6EE768", "New "+stateSpawner.countNewFreeze+" capacitors.");
+					StringBuilder sb = new StringBuilder();
+					sb.append("Cutting "+stateSpawner.countDeadlocks+" deadlocks,\\n");
+					sb.append("Cutting "+stateSpawner.countCapacity+" capacity deadlocks.\\n");
+					sb.append("Revisiting "+stateSpawner.countRevisited+" childs.\\n");
+					sb.append("New "+stateSpawner.countNewFreeze+" capacitors.\\n");
+					dotPrinter.addAnnotation(s, "#62B1D0", sb.toString());
 				}
 				
 				for (State n : newStates) {

@@ -72,7 +72,12 @@ public class DotPrinter {
 	}
 	
 	public void addNode(String current, String label, String color) throws IOException{
-		this.writter.append(current + " [fillcolor=\""+color+"\", label=\" "+ ++counter + "\\n" + label + "\"];");
+		String nodeData = current + " [ label=\" "+ ++counter + "\\n" + label + "\"";
+		if (color != null && !color.isEmpty()){
+			nodeData += " style=filled color=\""+color+"\"";
+		}
+		nodeData += "];";
+		this.writter.append(nodeData);
 		this.writter.newLine();	
 	}
 	
@@ -95,7 +100,7 @@ public class DotPrinter {
 	public void addState(State s){
 		try {
 			String current = "s" + Integer.toHexString(s.hashCode());
-			String color = "white";
+			String color = null;
 			if(s.map.playerWin(s)){
 				color = "green";
 			}
