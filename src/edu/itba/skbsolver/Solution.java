@@ -92,6 +92,7 @@ public class Solution {
 			ry -= dy[lug[rx][ry]];
 			rx -= tx;
 		}
+		sol.append(how[lug[rx][ry]]);
 
 		return sol.toString();
 	}

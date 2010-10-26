@@ -66,7 +66,7 @@ public class DFSRunner {
 
 	private static class CompareState implements Comparator<State> {
 		public int compare(State a, State b){
-			return -((a.moves - b.moves) + (a.moves - a.parent.moves - b.moves + b.parent.moves));
+			return -((a.moves - b.moves) + 4*(a.moves - a.parent.moves - b.moves + b.parent.moves));
 		}
 	}
 

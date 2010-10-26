@@ -34,7 +34,9 @@ public class StateSpawner {
 		int[][] distance = new int[level.xsize][level.ysize];
 		int[][] boxIndex = new int[level.xsize][level.ysize];
 
-		int px, py, rx, ry, tx, ty, p, boxMoved;
+		int countDeadlocks = 0, countCapacity = 0, countRevisited = 0;
+		
+		int px, py, rx, ry, tx, ty, p, boxMoved, newHash = 0;
 		boolean noDeadlock;
 
 		// Initialize auxiliar vectors
@@ -92,9 +94,6 @@ public class StateSpawner {
 						level.get(tx, ty) != '#'
 						&& boxIndex[tx][ty] == -1
 
-						// and is a "step-able" tile
-						&& !level.isBasicDeadlock(tx, ty)
-
 						))) {
 					noDeadlock = true;
 
@@ -102,20 +101,28 @@ public class StateSpawner {
 
 					if (boxMoved != -1) {
 
-						int newHash = s.hashIfMove(d, boxMoved);
-
-						if (posTable.has(newHash)) {
-							if (review){
-								State st = posTable.get(newHash);
-								
-								if (st.moves > s.moves + distance[px][py]+1){
-									st.moves = s.moves + distance[px][py]+1;
-									st.parent = s;
-									newStates.add(st);
-								}
-							}
-							
+						if (level.isBasicDeadlock(tx, ty)){
 							noDeadlock = false;
+							countDeadlocks++;
+						}
+
+						if (noDeadlock){
+							newHash = s.hashIfMove(d, boxMoved);
+	
+							if (posTable.has(newHash)) {
+								if (review){
+									State st = posTable.get(newHash);
+									
+									if (st.moves > s.moves + distance[px][py]+1){
+										st.moves = s.moves + distance[px][py]+1;
+										st.parent = s;
+										newStates.add(st);
+										countRevisited++;
+									}
+								}
+								
+								noDeadlock = false;
+							}
 						}
 
 						// Si no dispara un Capacitor Deadlock
@@ -125,11 +132,13 @@ public class StateSpawner {
 									cap.countMinus();
 								} else {
 									noDeadlock = false;
+									countCapacity++;
 								}
 							}
 							for (Capacitor cap : level.getCapacitorsByPos(tx, ty)) {
 								if (!cap.canIstepInto()) {
 									noDeadlock = false;
+									countCapacity++;
 								}
 							}
 							for (Capacitor cap : level.getCapacitorsByPos(rx, ry)){
@@ -137,6 +146,7 @@ public class StateSpawner {
 									cap.countPlus();
 								} else {
 									noDeadlock = false;
+									countCapacity++;
 								}
 							}
 						}
@@ -150,7 +160,11 @@ public class StateSpawner {
 								posTable.add(newHash, newState);
 
 								newStates.add(newState);
-
+								
+								noDeadlock = false;
+							}
+							if (!noDeadlock){
+								countCapacity++;
 							}
 						}
 					} else {
