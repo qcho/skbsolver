@@ -30,7 +30,7 @@ public class DFSRunner {
 			for (State n : newStates) {
 				if (level.playerWin(n)) {
 					winner = n;
-					logger.info("Found a solution: \n" + n.toString());
+					logger.debug("Found a solution: \n" + n.toString());
 				}
 				if (winner == null || n.moves < winner.moves) {
 					stack.addLast(n);
@@ -52,7 +52,7 @@ public class DFSRunner {
 				for (State n : newStates) {
 					if (level.playerWin(n)) {
 						winner = n;
-						logger.info("Found a solution: \n" + n.toString());
+						logger.debug("Found a solution: \n" + n.toString());
 					}
 					if (winner == null || n.moves < winner.moves) {
 						stack.addLast(n);

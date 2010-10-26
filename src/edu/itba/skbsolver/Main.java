@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import edu.itba.skbsolver.dot.DotPrinter;
 
 public class Main {
+	
 	private static final String USAGE_HELP = "Usage: skbsolver.jar level-file method [tree] \n"
 			+ "    level-file   The file of the level.\n"
 			+ "    method       Either \"BFS\" or \"DFS\".\n"
@@ -26,7 +27,7 @@ public class Main {
 
 		try {
 			if (args.length < 2) {
-				throw new Exception("Expected at least 2 arguments.\n");
+				throw new Exception("Expecting at least 2 arguments.\n");
 			}
 
 			level = new Level(new File(args[0]));
