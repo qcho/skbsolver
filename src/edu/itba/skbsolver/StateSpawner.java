@@ -26,7 +26,7 @@ public class StateSpawner {
 	}
 
 	public List<State> childs(State s, boolean review) {
-		logger.info("Listing childs for state: \n"+s.toString());
+		logger.debug("Listing childs for state: \n"+s.toString());
 		
 		List<State> newStates = new ArrayList<State>();
 		Deque<Integer> queue = new LinkedList<Integer>();
@@ -164,7 +164,7 @@ public class StateSpawner {
 			}
 		}
 			
-		logger.info("Found " + newStates.size() + " childs.");
+		logger.debug("Found " + newStates.size() + " childs.");
 		return newStates;
 	}
 
