@@ -28,6 +28,7 @@
 
     <target name="dist" depends="compile">
         <mkdir dir="${dist}" />
+        <copy file="${src}/logback.xml" tofile="${build}/logback.xml"/>
         <jar destfile="${dist}/skbsolver.jar">
             <zipfileset dir="${build}" prefix="" />
             <zipfileset src="${lib}/logback-classic-0.9.26.jar" />
