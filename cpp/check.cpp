@@ -46,7 +46,7 @@ int makeMove(vector<vector<char> > &m, int &x, int &y, int move, int &res){
     int ty = y + dy[move];
 
     if (DEBUG & 2){
-        err << x << ' ' << y << " to " << tx << ' ' << ty << endl;
+        cout << x << ' ' << y << " to " << tx << ' ' << ty << endl;
     }
 
     if (tx < 0 || tx >= m.size()){
@@ -153,7 +153,7 @@ int main(int argc, char** argv){
                 return 1;
             default:
                 if (DEBUG & 1)
-                cout << "Unknown error" << endl;
+                cout << "Unknown coutor" << endl;
                 return 1;
         }
     }

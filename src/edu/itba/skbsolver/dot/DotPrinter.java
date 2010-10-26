@@ -81,6 +81,17 @@ public class DotPrinter {
 		this.writter.newLine();
 	}
 	
+	public void addAnnotation(State s, String noteType, String note){
+		String parent = "s" + Integer.toHexString(s.hashCode());
+		String current = "a" + noteType;
+		try {
+			addNode(current, note);
+			addEdge(parent, current, "");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void addState(State s){
 		try {
 			String current = "s" + Integer.toHexString(s.hashCode());

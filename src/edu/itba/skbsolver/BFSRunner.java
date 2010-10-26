@@ -17,6 +17,10 @@ public class BFSRunner {
 		while (!queue.isEmpty()) {
 			State s = queue.remove();
 
+			if(dotPrinter != null){
+				dotPrinter.addState(s);
+			}
+			
 			if (level.playerWin(s)){
 				winner = s;
 				queue.clear();
@@ -28,9 +32,6 @@ public class BFSRunner {
 			// TODO: reorder states with a Heuristic
 
 			for (State n : newStates) {
-				if(dotPrinter != null){
-					dotPrinter.addState(n);
-				}
 				queue.add(n);
 			}
 		}
