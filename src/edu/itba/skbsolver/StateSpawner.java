@@ -120,6 +120,7 @@ public class StateSpawner {
 									if (st.moves > s.moves + distance[px][py]+1){
 										st.moves = s.moves + distance[px][py]+1;
 										st.parent = s;
+										st.direction = d;
 										newStates.add(st);
 										countRevisited++;
 									}
