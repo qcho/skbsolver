@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class Logger {
 	
@@ -32,7 +34,7 @@ public class Logger {
 		return single;
 	}
 	
-	public static void setStatus(boolean activate){
+	public void setStatus(boolean activate){
 		single.activated = activate;
 	}
 	
@@ -65,7 +67,17 @@ public class Logger {
 	}
 	public void error(String param, Exception e){
 		if (activated){
-			log("ERROR: " + param + "\nException: " + e);
+			log("ERROR: " + param + "\nException: " + getStackTrace(e));
 		}
 	}
+	
+	public static String getStackTrace(Throwable t){
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw, true);
+        t.printStackTrace(pw);
+        pw.flush();
+        sw.flush();
+        return sw.toString();
+    }
+
 }

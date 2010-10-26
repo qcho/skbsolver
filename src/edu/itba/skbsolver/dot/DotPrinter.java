@@ -18,6 +18,8 @@ public class DotPrinter {
 
 	private File dotFile = null;
 	private BufferedWriter writter = null;
+	
+	private long counter = 0;
 
 	private DotPrinter() {
 	}
@@ -70,7 +72,7 @@ public class DotPrinter {
 	}
 	
 	public void addNode(String current, String label) throws IOException{
-		this.writter.append(current + " [label=\"" + label + "\"];");
+		this.writter.append(current + " [label=\" "+ ++counter + "\n" + label + "\"];");
 		this.writter.newLine();	
 	}
 	

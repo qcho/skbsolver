@@ -1,10 +1,8 @@
 package edu.itba.skbsolver;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.List;
 
 public class Solution {
 
@@ -58,9 +56,6 @@ public class Solution {
 
 		queue.addLast(new Point(px, py));
 		lug[px][py] = 0;
-
-		StringBuilder sol = new StringBuilder();
-		List<String> sl = new ArrayList<String>();
 
 		while (!queue.isEmpty()) {
 			Point p = queue.removeFirst();

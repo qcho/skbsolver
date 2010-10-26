@@ -34,7 +34,9 @@ public class Main {
 				dotPrinter = DotPrinter.getInstance();
 				dotPrinter.init(new File(args[0]+".dot"));
 				dotPrinter.addState(level.initial);
+			
 			}
+			System.out.println("Searching for best solution, sit tight!");
 			if ("BFS".equals(args[1])) {
 				logger.info("Running BFS");
 				sol = BFSRunner.run(level, dotPrinter);
@@ -52,22 +54,25 @@ public class Main {
 				for (String s : sol.transitions) {
 					sb.append(s);
 				}
+				System.out.println("Best solution found in "+sol.movements+" movements:");
 				System.out.println(sb);
 			} else {
 				System.out.println("No solution found.");
 			}
 			
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println(Logger.getStackTrace(e));
 			logger.error(e.getMessage(), e);
 			System.out.println(USAGE_HELP);
 		} finally {
 			long end = System.currentTimeMillis();
-			
+			String footer = "Execution time was "+(end-start)+" ms.";
 			if (dotPrinter != null){
-				String footer = "Execution time was "+(end-start)+" ms.";
 				dotPrinter.close(footer);
-				logger.info(footer);
 			}
+			logger.info(footer);
+			System.out.println(footer);
 			
 		}
 
