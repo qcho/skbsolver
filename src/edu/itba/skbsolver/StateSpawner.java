@@ -17,11 +17,15 @@ public class StateSpawner {
 	private Level level;
 
 	final static Logger logger = LoggerFactory.getLogger(StateSpawner.class);
+
+	public int countDeadlocks;
+	public int countCapacity;
+	public int countRevisited;
+	public int countNewFreeze;
 	
 	public StateSpawner(PositionsTable posTable, Level level) {
 		this.posTable = posTable;
-		this.level = level;
-		
+		this.level = level;		
 		
 	}
 
@@ -34,7 +38,10 @@ public class StateSpawner {
 		int[][] distance = new int[level.xsize][level.ysize];
 		int[][] boxIndex = new int[level.xsize][level.ysize];
 
-		int countDeadlocks = 0, countCapacity = 0, countRevisited = 0;
+		countDeadlocks = 0;
+		countCapacity = 0;
+		countRevisited = 0;
+		countNewFreeze = 0;
 		
 		int px, py, rx, ry, tx, ty, p, boxMoved, newHash = 0;
 		boolean noDeadlock;
@@ -164,7 +171,7 @@ public class StateSpawner {
 								noDeadlock = false;
 							}
 							if (!noDeadlock){
-								countCapacity++;
+								countNewFreeze++;
 							}
 						}
 					} else {
