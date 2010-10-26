@@ -1,8 +1,10 @@
 package edu.itba.skbsolver;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Solution {
 
@@ -56,7 +58,9 @@ public class Solution {
 
 		queue.addLast(new Point(px, py));
 		lug[px][py] = 0;
-		map[next.player >> 16][next.player & 0xFFFF] = ' ';
+
+		StringBuilder sol = new StringBuilder();
+		List<String> sl = new ArrayList<String>();
 
 		while (!queue.isEmpty()) {
 			Point p = queue.removeFirst();
@@ -68,30 +72,44 @@ public class Solution {
 				rx = px + dx[d];
 				ry = py + dy[d];
 
-				if (map[rx][ry] != '#' && lug[rx][ry] == -1) {
+				if (d == next.direction
+						&& (rx<<16) + ry == next.player
+					){
+
+					lug[rx][ry] = d;
+					
+					px = current.player >> 16;
+					py = current.player & 0xFFFF;
+					
+					char[] how = { 'l', 'u', 'r', 'd' };
+					
+					StringBuffer temp = new StringBuffer();
+
+					while (px != rx || py != ry) {
+						d = lug[rx][ry];
+						temp.append(how[d]);
+						rx -= dx[d];
+						ry -= dy[d];
+					}
+
+					temp = temp.reverse();
+					sl.add(temp.toString());
+					
+					queue.clear();
+					break;
+
+				} else if (map[rx][ry] != '#' && lug[rx][ry] == -1) {
+				
 					lug[rx][ry] = d;
 					queue.addLast(new Point(rx, ry));
 				}
 			}
 		}
-
-		StringBuilder sol = new StringBuilder();
-		rx = next.player >> 16;
-		ry = next.player & 0xFFFF;
-
-		px = current.player >> 16;
-		py = current.player & 0xFFFF;
-
-		char[] how = { 'r', 'd', 'l', 'u' };
-
-		while (px != rx || py != ry) {
-			sol.append(how[lug[rx][ry]]);
-			int tx = dx[lug[rx][ry]];
-			ry -= dy[lug[rx][ry]];
-			rx -= tx;
+		
+		for(int i = sl.size()-1; i >= 0; i--){
+			sol.append(sl.get(i));
 		}
-		sol.append(how[lug[rx][ry]]);
-
+		
 		return sol.toString();
 	}
 

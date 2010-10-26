@@ -10,7 +10,7 @@
 // Bit 0 on: Information
 // Bit 1 on: Move Information
 // Bit 2 on: Print map
-#define DEBUG 0
+#define DEBUG 7
 
 using namespace std;
 char buffer[65536];

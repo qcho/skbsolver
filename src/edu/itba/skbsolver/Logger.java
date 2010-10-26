@@ -11,6 +11,7 @@ public class Logger {
 	
 	private OutputStreamWriter out;
 	private boolean console;
+	private boolean activated;
 	
 	public Logger(boolean console) {
 		if (!console){
@@ -31,6 +32,10 @@ public class Logger {
 		return single;
 	}
 	
+	public static void setStatus(boolean activate){
+		single.activated = activate;
+	}
+	
 	public void log(String param){
 		try {
 			if (console){
@@ -44,15 +49,23 @@ public class Logger {
 	}
 	
 	public void info(String param){
-		log("INFO: " + param);
+		if (activated){
+			log("INFO: " + param);
+		}
 	}
 	public void debug(String param){
-		log("DEBUG: " + param);
+		if (activated){
+			log("DEBUG: " + param);
+		}
 	}
 	public void error(String param){
-		log("ERROR: " + param);
+		if (activated){
+			log("ERROR: " + param);
+		}
 	}
 	public void error(String param, Exception e){
-		log("ERROR: " + param + "\nException: " + e);
+		if (activated){
+			log("ERROR: " + param + "\nException: " + e);
+		}
 	}
 }

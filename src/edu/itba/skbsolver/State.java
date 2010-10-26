@@ -19,6 +19,7 @@ public class State implements Comparable<State> {
 
 	public int[] boxes;
 	public int moves;
+	public int direction;
 	public int player;
 	public int hashCalculated = 0;
 	public State parent = null;
@@ -69,6 +70,7 @@ public class State implements Comparable<State> {
 		this.boxes = s.boxes.clone();
 		this.moves = s.moves + playerMoves;
 		this.map = s.map;
+		this.direction = direction;
 		this.player = s.boxes[boxMoved];
 
 		this.boxes[boxMoved] += (dx[direction] << 16) + dy[direction];
