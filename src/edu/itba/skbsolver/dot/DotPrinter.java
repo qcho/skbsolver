@@ -6,13 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import edu.itba.skbsolver.Logger;
 import edu.itba.skbsolver.State;
 
 public class DotPrinter {
-	final static Logger logger = LoggerFactory.getLogger(DotPrinter.class);
+	final static Logger logger = Logger.getLogger(false);
 
 	// volatile is needed so that multiple thread can reconcile the instance
 	// semantics for volatile changed in Java 5.

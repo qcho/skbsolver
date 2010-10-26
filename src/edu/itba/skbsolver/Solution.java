@@ -4,11 +4,9 @@ import java.awt.Point;
 import java.util.Deque;
 import java.util.LinkedList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class Solution {
-	final static Logger logger = LoggerFactory.getLogger(Solution.class);
+
+	final static Logger logger = Logger.getLogger(false);
 
 	public static final int[] dx = { 0, 1, 0, -1 };
 	public static final int[] dy = { 1, 0, -1, 0 };

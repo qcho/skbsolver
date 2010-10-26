@@ -5,9 +5,6 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class StateSpawner {
 
 	public static final int[] dx = { 0, 1, 0, -1 };
@@ -16,7 +13,7 @@ public class StateSpawner {
 	private PositionsTable posTable;
 	private Level level;
 
-	final static Logger logger = LoggerFactory.getLogger(StateSpawner.class);
+	final static Logger logger = Logger.getLogger(false);
 
 	public int countDeadlocks;
 	public int countCapacity;

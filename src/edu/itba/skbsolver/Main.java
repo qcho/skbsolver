@@ -3,9 +3,6 @@ package edu.itba.skbsolver;
 import java.io.File;
 import java.security.InvalidParameterException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import edu.itba.skbsolver.dot.DotPrinter;
 
 public class Main {
@@ -15,7 +12,7 @@ public class Main {
 			+ "    method       Either \"BFS\" or \"DFS\".\n"
 			+ "    tree         Wheter to output .dot file or not.";
 
-	final static Logger logger = LoggerFactory.getLogger(Main.class);
+	final static Logger logger = Logger.getLogger(false);
 
 	public static void main(String args[]) {
 		
@@ -34,7 +31,7 @@ public class Main {
 
 			if (args.length >= 3 && "tree".equals(args[2])) {
 				dotPrinter = DotPrinter.getInstance();
-				dotPrinter.init(new File(args[0].replace(".level", ".dot")));
+				dotPrinter.init(new File(args[0]+".dot"));
 				dotPrinter.addState(level.initial);
 			}
 			if ("BFS".equals(args[1])) {

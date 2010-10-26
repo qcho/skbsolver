@@ -7,12 +7,9 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class LevelParser {
 
-	final static Logger logger = LoggerFactory.getLogger(LevelParser.class);
+	final static Logger logger = Logger.getLogger(false);
 
 	public int xsize = 0;
 	public int ysize = 0;

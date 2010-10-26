@@ -7,9 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * A Scenario is a data structure to keep a map in screen. A map is a set of
  * walls and targets, in this case represented by chars in a array.
@@ -18,7 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Level extends LevelParser {
 
-	final static Logger logger = LoggerFactory.getLogger(Level.class);
+	final static Logger logger = Logger.getLogger(false);
 
 	public static final int[] dx = { 0, 1, 0, -1 };
 	public static final int[] dy = { 1, 0, -1, 0 };
