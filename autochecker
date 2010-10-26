@@ -1,0 +1,9 @@
+#! /bin/bash
+
+for i in `ls levels/easy/*`; do
+	java -Xmx256m -jar dist/skbsolver.jar $i DFS > sol
+	echo "Level $i"
+	cat sol
+	cat sol | tail -n 2 | head -n 1 > resol
+	./check $i resol
+done;

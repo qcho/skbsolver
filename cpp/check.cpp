@@ -10,7 +10,7 @@
 // Bit 0 on: Information
 // Bit 1 on: Move Information
 // Bit 2 on: Print map
-#define DEBUG 7
+#define DEBUG 1
 
 using namespace std;
 char buffer[65536];
@@ -118,11 +118,14 @@ int main(int argc, char** argv){
         m.push_back(vector<char>(0));
         for(int i = 0; buffer[i]; i++){
             m[line].push_back(buffer[i]);
-            if (m[line][i] == '@'){
+            if (buffer[i] == '@'){
                 x = line;
                 y = i;
-            } else if (m[line][i] == '$'){
+            } else if (buffer[i] == '$'){
                 remaining++;
+            } else if (buffer[i] == '+'){
+                x = line;
+                y = i;
             }
         }
 

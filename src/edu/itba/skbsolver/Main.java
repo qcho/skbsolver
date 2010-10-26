@@ -17,7 +17,7 @@ public class Main {
 	public static void main(String args[]) {
 		
 		long start = System.currentTimeMillis();
-		logger.setStatus(true);
+		logger.setStatus(false);
 
 		Solution sol = null;
 		DotPrinter dotPrinter = null;
