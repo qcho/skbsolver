@@ -71,8 +71,8 @@ public class DotPrinter {
 
 	}
 	
-	public void addNode(String current, String label) throws IOException{
-		this.writter.append(current + " [label=\" "+ ++counter + "\n" + label + "\"];");
+	public void addNode(String current, String label, String color) throws IOException{
+		this.writter.append(current + " [fillcolor=\""+color+"\", label=\" "+ ++counter + "\n" + label + "\"];");
 		this.writter.newLine();	
 	}
 	
@@ -81,11 +81,11 @@ public class DotPrinter {
 		this.writter.newLine();
 	}
 	
-	public void addAnnotation(State s, String noteType, String note){
+	public void addAnnotation(State s, String color, String note){
 		String parent = "s" + Integer.toHexString(s.hashCode());
-		String current = "a" + noteType;
+		String current = parent + counter;
 		try {
-			addNode(current, note);
+			addNode(current, note, color);
 			addEdge(parent, current, "");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -95,7 +95,11 @@ public class DotPrinter {
 	public void addState(State s){
 		try {
 			String current = "s" + Integer.toHexString(s.hashCode());
-			addNode(current, s.toString().replace("\n", "\\n"));
+			String color = "white";
+			if(s.map.playerWin(s)){
+				color = "green";
+			}
+			addNode(current, s.toString().replace("\n", "\\n"),color);
 			if(s.parent != null){
 				String parent = "s" + Integer.toHexString(s.parent.hashCode());
 				addEdge(parent, current, "" + (s.moves - s.parent.moves));
