@@ -31,18 +31,22 @@ public class Main {
 
 			level = new Level(new File(args[0]));
 
-			if (args.length == 3 && "tree".equals(args[2])) {
+			if (args.length >= 3 && "tree".equals(args[2])) {
 				dotPrinter = DotPrinter.getInstance();
 				dotPrinter.init(new File(args[0].replace(".level", ".dot")));
 				dotPrinter.addState(level.initial);
 			}
+			if (args.length >= 3 && "verbose".equals(args[2])
+					|| args.length >= 4 && "verbose".equals(args[3])) {
+				
+			}
 
 			if ("BFS".equals(args[1])) {
-				System.out.println("Running BFS");
+				logger.info("Running BFS");
 				sol = BFSRunner.run(level, dotPrinter);
 
 			} else if ("DFS".equals(args[1])) {
-				System.out.println("Running DFS");
+				logger.info("Running DFS");
 				sol = DFSRunner.run(level, dotPrinter);
 			} else {
 				throw new InvalidParameterException(
@@ -50,15 +54,14 @@ public class Main {
 			}
 
 			if (sol.movements != -1) {
-				System.out.println("Best Solution: " + sol.movements);
-
+				StringBuilder sb = new StringBuilder();
 				for (String s : sol.transitions) {
-					System.out.println("    " + s);
+					sb.append(s);
 				}
+				System.out.println(sb);
 			} else {
 				System.out.println("No solution found.");
 			}
-			System.out.println(level.BADCAPACITORS);
 			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -69,7 +72,7 @@ public class Main {
 			if (dotPrinter != null){
 				String footer = "Execution time was "+(end-start)+" ms.";
 				dotPrinter.close(footer);
-				System.out.println(footer);
+				logger.info(footer);
 			}
 			
 		}

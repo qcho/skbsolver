@@ -34,8 +34,6 @@ public class Level extends LevelParser {
 	private boolean[][] isDeadlock;
 
 	public int[][] heuristicDistance;
-	
-	public int BADCAPACITORS;
 
 	// A representation of the initial status
 	public State initial;
@@ -48,8 +46,6 @@ public class Level extends LevelParser {
 	 */
 	Level(File file) {
 		super(file);
-		
-		BADCAPACITORS = 0;
 
 		int[] initialBoxes = new int[boxesBuffer.size()];
 		int j = 0;
