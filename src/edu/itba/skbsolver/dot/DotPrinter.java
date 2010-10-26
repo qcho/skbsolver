@@ -72,7 +72,7 @@ public class DotPrinter {
 	}
 	
 	public void addNode(String current, String label, String color) throws IOException{
-		this.writter.append(current + " [fillcolor=\""+color+"\", label=\" "+ ++counter + "\n" + label + "\"];");
+		this.writter.append(current + " [fillcolor=\""+color+"\", label=\" "+ ++counter + "\\n" + label + "\"];");
 		this.writter.newLine();	
 	}
 	
