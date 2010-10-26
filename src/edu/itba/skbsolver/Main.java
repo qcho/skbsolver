@@ -38,11 +38,11 @@ public class Main {
 			}
 			System.out.println("Searching for best solution, sit tight!");
 			if ("BFS".equals(args[1])) {
-				logger.info("Running BFS");
+				//logger.info("Running BFS");
 				sol = BFSRunner.run(level, dotPrinter);
 
 			} else if ("DFS".equals(args[1])) {
-				logger.info("Running DFS");
+				//logger.info("Running DFS");
 				sol = DFSRunner.run(level, dotPrinter);
 			} else {
 				throw new InvalidParameterException(
@@ -71,7 +71,7 @@ public class Main {
 			if (dotPrinter != null){
 				dotPrinter.close(footer);
 			}
-			logger.info(footer);
+			//logger.info(footer);
 			System.out.println(footer);
 			
 		}

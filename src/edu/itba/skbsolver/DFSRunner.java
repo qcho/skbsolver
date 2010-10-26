@@ -1,7 +1,5 @@
 package edu.itba.skbsolver;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +25,7 @@ public class DFSRunner {
 			for (State n : newStates) {
 				if (level.playerWin(n)) {
 					winner = n;
-					logger.debug("Found a solution: \n" + n.toString());
+					//logger.debug("Found a solution: \n" + n.toString());
 				}
 				if (winner == null || n.moves < winner.moves) {
 					stack.addLast(n);
@@ -49,7 +47,17 @@ public class DFSRunner {
 				
 				List<State> newStates = stateSpawner.childs(s, true);
 	
-				Collections.sort(newStates, new CompareState());
+				for(int i = 0; i < newStates.size(); i++){
+					State r = newStates.get(i);
+					if (level.playerWin(r)) {
+						winner = r;
+						//logger.debug("Found a solution: \n" + r.toString());
+					}
+					if (r.direction == s.direction && r.moves - s.moves == 1){
+						newStates.remove(i);
+						newStates.add(r);
+					}	
+				}
 
 				if(dotPrinter != null){
 					StringBuilder sb = new StringBuilder();
@@ -61,10 +69,6 @@ public class DFSRunner {
 				}
 				
 				for (State n : newStates) {
-					if (level.playerWin(n)) {
-						winner = n;
-						logger.debug("Found a solution: \n" + n.toString());
-					}
 					if (winner == null || n.moves < winner.moves) {
 						stack.addLast(n);
 					}
@@ -74,11 +78,4 @@ public class DFSRunner {
 		
 		return new Solution(winner);
 	}
-
-	private static class CompareState implements Comparator<State> {
-		public int compare(State a, State b){
-			return -((a.moves - b.moves) + 4*(a.moves - a.parent.moves - b.moves + b.parent.moves));
-		}
-	}
-
 }

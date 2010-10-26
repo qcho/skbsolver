@@ -23,7 +23,7 @@ public class Solution {
 
 			states.addFirst(winner);
 
-			logger.info("The solution is: \n" + winner.toString());
+			//logger.info("The solution is: \n" + winner.toString());
 			
 			while (winner.parent != null) {
 				State current = winner.parent;

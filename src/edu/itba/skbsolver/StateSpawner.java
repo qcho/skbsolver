@@ -27,7 +27,7 @@ public class StateSpawner {
 	}
 
 	public List<State> childs(State s, boolean review) {
-		logger.debug("Listing childs for state: \n"+s.toString());
+		//logger.debug("Listing childs for state: \n"+s.toString());
 		
 		List<State> newStates = new ArrayList<State>();
 		Deque<Integer> queue = new LinkedList<Integer>();
@@ -40,7 +40,7 @@ public class StateSpawner {
 		countRevisited = 0;
 		countNewFreeze = 0;
 		
-		int px, py, rx, ry, tx, ty, p, boxMoved, newHash = 0;
+		int px, py, rx, ry, tx, ty, p, boxMoved;
 		boolean noDeadlock;
 
 		// Initialize auxiliar vectors
@@ -58,7 +58,7 @@ public class StateSpawner {
 			for (Capacitor cap : level.getCapacitorsByPos(s.boxes[i] >> 16,
 					s.boxes[i] & 0xFFFF)) {
 				if (!cap.canIstepInto()){
-					logger.info("But happened!");
+					//logger.info("But happened!");
 					return new LinkedList<State>();	
 				}
 				cap.countPlus();
@@ -109,27 +109,7 @@ public class StateSpawner {
 							noDeadlock = false;
 							countDeadlocks++;
 						}
-
-						if (noDeadlock){
-							newHash = s.hashIfMove(d, boxMoved);
-	
-							if (posTable.has(newHash)) {
-								if (review){
-									State st = posTable.get(newHash);
-									
-									if (st.moves > s.moves + distance[px][py]+1){
-										st.moves = s.moves + distance[px][py]+1;
-										st.parent = s;
-										st.direction = d;
-										newStates.add(st);
-										countRevisited++;
-									}
-								}
-								
-								noDeadlock = false;
-							}
-						}
-
+						
 						// Si no dispara un Capacitor Deadlock
 						if (noDeadlock) {
 							for (Capacitor cap : level.getCapacitorsByPos(rx, ry)){
@@ -157,23 +137,32 @@ public class StateSpawner {
 						}
 
 						if (noDeadlock) {
-							if (review || !s.triggersFreezeDeadlock(boxMoved, d)) {
+							if (!s.triggersFreezeDeadlock(boxMoved, d)) {
 
 								State newState = new State(s, boxMoved, d,
-										distance[px][py]+1, newHash);
+										distance[px][py]+1);
 
-								posTable.add(newHash, newState);
-
-								newStates.add(newState);
+								if (posTable.has(newState)){
+									State st = posTable.get(newState);
+									
+									if (st.moves > newState.moves){
+										if (review){
+											newStates.add(newState);
+											posTable.add(newState);
+										}
+										countRevisited++;
+									}
+								} else {
+									newStates.add(newState);
+									posTable.add(newState);
+								}
 								
-								noDeadlock = false;
-							}
-							if (!noDeadlock){
+								
+							} else {
 								countNewFreeze++;
 							}
 						}
 					} else {
-						// Lo agrego a la cola
 
 						distance[rx][ry] = distance[px][py] + 1;
 						
@@ -183,7 +172,7 @@ public class StateSpawner {
 			}
 		}
 			
-		logger.debug("Found " + newStates.size() + " childs.");
+		//logger.debug("Found " + newStates.size() + " childs.");
 		return newStates;
 	}
 

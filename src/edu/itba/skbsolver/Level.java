@@ -79,7 +79,7 @@ public class Level extends LevelParser {
 			}
 			s.append('\n');
 		}
-		logger.info("These are deadlocks: \n" + s.toString());
+		//logger.info("These are deadlocks: \n" + s.toString());
 		
 		
 		calculateHallwayCapacitors();
@@ -240,7 +240,7 @@ public class Level extends LevelParser {
 	 * different States)
 	 */
 	private void createZobristKeys() {
-		Random randGen = new Random(42 + xsize + ysize);
+		Random randGen = new Random(xsize + ysize);
 		playerZobrist = new int[xsize][ysize];
 		boxZobrist = new int[xsize][ysize];
 		for (int i = 0; i < xsize; i++) {
@@ -331,7 +331,7 @@ public class Level extends LevelParser {
 	 */
 	public void addNewCapacitor(Deque<Integer> boxesAsWalls, int targets) {
 		if (boxesAsWalls.size() != targets){
-			logger.info("New Capacitor :). It's capacity is " + (boxesAsWalls.size() - 1));
+			//logger.info("New Capacitor :). It's capacity is " + (boxesAsWalls.size() - 1));
 			Capacitor cap = new Capacitor(boxesAsWalls.size() - 1);
 			
 			for (Integer Box : boxesAsWalls) {

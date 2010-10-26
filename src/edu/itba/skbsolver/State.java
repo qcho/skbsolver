@@ -64,14 +64,14 @@ public class State implements Comparable<State> {
 	 * @param boxMoved
 	 * @param d
 	 */
-	public State(State s, int boxMoved, int direction, int playerMoves,
-			int newHash) {
+	public State(State s, int boxMoved, int direction, int playerMoves) {
 		this.parent = s;
 		this.boxes = s.boxes.clone();
 		this.moves = s.moves + playerMoves;
 		this.map = s.map;
 		this.direction = direction;
 		this.player = s.boxes[boxMoved];
+		this.hashCalculated = parent.hashIfMove(direction, boxMoved);
 
 		this.boxes[boxMoved] += (dx[direction] << 16) + dy[direction];
 		this.heuristicDistance += 
@@ -90,8 +90,6 @@ public class State implements Comparable<State> {
 			boxMoved++;
 		}
 		 
-
-		this.hashCalculated = newHash;
 	}
 
 	public State() {
@@ -150,9 +148,12 @@ public class State implements Comparable<State> {
 	 * @return
 	 */
 	public boolean equals(State other) {
-		return this.hashCalculated == other.hashCalculated
-			&& player == other.player
-			&& moves == other.moves;
+		boolean ret = this.hashCalculated == other.hashCalculated
+			&& player == other.player;
+		for (int i = 0; ret && i < boxes.length; i++){
+			ret &= (boxes[i] == other.boxes[i]);
+		}
+		return ret;
 	}
 
 	/**
