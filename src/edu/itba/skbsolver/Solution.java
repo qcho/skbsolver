@@ -81,7 +81,7 @@ public class Solution {
 					px = current.player >> 16;
 					py = current.player & 0xFFFF;
 					
-					char[] how = { 'l', 'u', 'r', 'd' };
+					char[] how = { 'r', 'd', 'l', 'u' };
 					
 					StringBuffer temp = new StringBuffer();
 
@@ -92,11 +92,7 @@ public class Solution {
 						ry -= dy[d];
 					}
 
-					temp = temp.reverse();
-					sl.add(temp.toString());
-					
-					queue.clear();
-					break;
+					return temp.reverse().toString();
 
 				} else if (map[rx][ry] != '#' && lug[rx][ry] == -1) {
 				
@@ -106,11 +102,7 @@ public class Solution {
 			}
 		}
 		
-		for(int i = sl.size()-1; i >= 0; i--){
-			sol.append(sl.get(i));
-		}
-		
-		return sol.toString();
+		throw new RuntimeException("Problem ocurred while rebuilding the solution.");
 	}
 
 }
