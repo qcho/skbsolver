@@ -37,11 +37,6 @@ public class Main {
 				dotPrinter.init(new File(args[0].replace(".level", ".dot")));
 				dotPrinter.addState(level.initial);
 			}
-			if (args.length >= 3 && "verbose".equals(args[2])
-					|| args.length >= 4 && "verbose".equals(args[3])) {
-				
-			}
-
 			if ("BFS".equals(args[1])) {
 				logger.info("Running BFS");
 				sol = BFSRunner.run(level, dotPrinter);
